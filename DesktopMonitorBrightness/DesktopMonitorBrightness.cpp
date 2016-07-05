@@ -11,6 +11,19 @@
 
 std::vector<HANDLE>  hMonitors;
 
+
+// pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
+void PrintMonitorBrightness(HANDLE physmonitor) {
+	DWORD min = 0;
+	DWORD current = 0;
+	DWORD max = 0;
+
+	bool bSuccess = GetMonitorBrightness(physmonitor, &min, &current, &max);
+
+	//printf("Monitor Brightness values {min %d, current %d, max %d }\n", pdwMinimumBrightness, pdwCurrentBrightness, pdwMaximumBrightness);
+}
+
+
 // this gets called each time EnumDisplayMonitors gets called.
 static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) {
 	printf("monitor callback run\n");
@@ -30,8 +43,13 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 		pPhysicalMonitors = (LPPHYSICAL_MONITOR)malloc(cPhysicalMonitors* sizeof(PHYSICAL_MONITOR));
 
 		if (pPhysicalMonitors != NULL) {
+			// focus here <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			wprintf(L"Physical monitor: '%s' (handle = 0x%X)\n", pPhysicalMonitors[0].szPhysicalMonitorDescription, pPhysicalMonitors[0].hPhysicalMonitor);
+
 			// adds the monitor handle to the vector
 			hMonitors.push_back(pPhysicalMonitors[0].hPhysicalMonitor);
+
+			PrintMonitorBrightness(pPhysicalMonitors[0].hPhysicalMonitor);
 		} else {
 			printf("but physical monitors were null\n");
 		}
@@ -45,18 +63,6 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 	return true;
 }
 
-
-// pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
-void PrintMonitorBrightness(HANDLE physmonitor) {
-	DWORD pdwMinimumBrightness = 0;
-	DWORD pdwCurrentBrightness = 0;
-	DWORD pdwMaximumBrightness = 0;
-
-	GetMonitorBrightness(physmonitor, &pdwMinimumBrightness, &pdwCurrentBrightness, &pdwMaximumBrightness);
-
-	printf("Monitor Brightness values {min %d, current %d, max %d }\n", pdwMinimumBrightness, pdwCurrentBrightness, pdwMaximumBrightness);
-}
-
 void getMonitorHandle() {
 	//HWND hWnd;
 
@@ -68,10 +74,10 @@ void getMonitorHandle() {
 	// this function is an odd beast
 	EnumDisplayMonitors(0, 0, MonitorEnum, 0); // unsure what this end bit is doing, requires some testing
 
-	for each (HMONITOR monitor in hMonitors) {
+	/*for each (HANDLE monitor in hMonitors) {
 		PrintMonitorBrightness(monitor);
 
-	}
+	}*/
 
 }
 
