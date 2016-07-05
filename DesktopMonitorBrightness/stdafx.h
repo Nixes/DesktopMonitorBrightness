@@ -13,6 +13,7 @@
 
 #include <windows.h>
 
+
 #include <HighLevelMonitorConfigurationAPI.h>
 
 #include <vector>
