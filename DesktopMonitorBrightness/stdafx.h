@@ -10,6 +10,7 @@
 #define WIN32_LEAN_AND_MEAN // removes headers that I won't be touching anyway
 #include <stdio.h>
 #include <tchar.h>
+#include <sstream> // used for argument parsing
 
 #include <windows.h>
 

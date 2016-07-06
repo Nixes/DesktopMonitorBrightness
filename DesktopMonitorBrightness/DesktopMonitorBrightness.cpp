@@ -13,6 +13,10 @@ std::vector<HANDLE>  physicalMonitorHandles;
 
 std::vector<float>  monitorBrightnessScaleFactor;
 
+// this is a function that attempts to fade between the current brightness setting and the target brightness setting.
+// only enable this if you are sure your monitors are capable and don't break / blow up
+void BrightnessSetFade() {
+}
 
 // pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
 void PrintMonitorBrightness(HANDLE physmonitor) {
@@ -114,12 +118,20 @@ void setAllMonitorsBrightness(int brightness) {
 }
 
 
-int _tmain(int argc, _TCHAR* argv[]) {
+int main(int argc, const char* argv[]) {
 
 	getMonitorHandles();
 
 	if (argc > 1) {
-		setAllMonitorsBrightness((int)argv[0]);
+		std::istringstream ss(argv[1]);
+
+		int brightness;
+		if (ss >> brightness) { // checks to make sure conversion to integer was valid
+			printf("Monitor arg was %i",brightness);
+			setAllMonitorsBrightness(brightness);
+		} else {
+			printf("Unable to parse brightness argument");
+		}
 	}
 	//return 0;
 }
