@@ -9,7 +9,7 @@
 // - http://stackoverflow.com/questions/34091968/how-to-use-getmonitorcapabilities-and-getmonitorbrightness-functions
 // - https://msdn.microsoft.com/en-us/library/windows/desktop/dd692950(v=vs.85).aspx
 
-std::vector<HANDLE>  hMonitors;
+std::vector<HANDLE>  physicalMonitorHandles;
 
 
 // pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
@@ -24,7 +24,7 @@ void PrintMonitorBrightness(HANDLE physmonitor) {
 }
 
 
-// this gets called each time EnumDisplayMonitors gets called.
+// this gets called each time EnumDisplayMonitors has another monitor to process
 static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) {
 	printf("monitor callback run\n");
 
@@ -39,7 +39,7 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 	if (bSuccess) {
 		printf("got some bloody monitors\n");
 
-		// get the physical monitors from the raw data?, this function seems to be the problem
+		// this allocates space for the physical monitor handlers based on the number of physical monitors detected
 		pPhysicalMonitors = (LPPHYSICAL_MONITOR)malloc(numberPhysicalMonitors* sizeof(PHYSICAL_MONITOR));
 
 		if (pPhysicalMonitors != NULL) {
@@ -56,7 +56,6 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 	if (bSuccess) {
 		bSuccess = GetPhysicalMonitorsFromHMONITOR(hMon, numberPhysicalMonitors, pPhysicalMonitors);
 		if (bSuccess) {
-			// focus here <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 			printf("Physical monitor: '%s' (handle = 0x%X)\n", pPhysicalMonitors[0].szPhysicalMonitorDescription, pPhysicalMonitors[0].hPhysicalMonitor);
 
 			// adds the monitor handle to the vector
@@ -66,7 +65,7 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 		}
 	}
 
-	// we return true to signal that we want to keep looking
+	// we always return true to signal that we want to keep looking
 	return true;
 }
 
