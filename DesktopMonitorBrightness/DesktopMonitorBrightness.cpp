@@ -132,6 +132,32 @@ void SetBrightnessFade(int targetBrightness, int initialBrightness) {
 	}
 }
 
+float GetFloatHoursNow() {
+	// current time
+	std::time_t now = std::time(0);
+	struct tm * tm_now;
+	tm_now = localtime(&now);
+
+	float currTimeHours = (float)tm_now->tm_hour + ((float)tm_now->tm_sec / 60.0);
+	return currTimeHours;
+}
+
+void SetBasedOnTimeOfDay() {
+	// sunrise in 24 decimal hour time
+	int sunrisetime_hours = 7;
+	// sunset in 24 decimal hour time
+	int sunsettime_hours = 17;
+	// time range between the two
+	int lightrange = sunsettime_hours - sunrisetime_hours;
+
+
+
+	while (true) {
+
+		Sleep(1000);
+	}
+}
+
 
 int main(int argc, const char* argv[]) {
 	printf("DesktopMonitorBrightness, to use include arg1 brightness as a value between 0 and 100\n");
