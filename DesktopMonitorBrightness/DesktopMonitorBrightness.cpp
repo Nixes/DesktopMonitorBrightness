@@ -20,7 +20,7 @@ void PrintMonitorBrightness(HANDLE physmonitor) {
 
 	bool bSuccess = GetMonitorBrightness(physmonitor, &min, &current, &max);
 
-	//printf("Monitor Brightness values {min %d, current %d, max %d }\n", pdwMinimumBrightness, pdwCurrentBrightness, pdwMaximumBrightness);
+	printf("Monitor Brightness values {min %d, current %d, max %d }\n", min, current, max);
 }
 
 
@@ -28,35 +28,42 @@ void PrintMonitorBrightness(HANDLE physmonitor) {
 static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) {
 	printf("monitor callback run\n");
 
-	// these variables are intermediaries for 
-	DWORD cPhysicalMonitors;
+	// these variables are intermediaries for GetNumberOfPhysicalMonitorsFromHMONITOR
+	DWORD numberPhysicalMonitors;
 	LPPHYSICAL_MONITOR pPhysicalMonitors = NULL;
 
 
 	// Get the number of physical monitors.
-	BOOL bSuccess = GetNumberOfPhysicalMonitorsFromHMONITOR(hMon, &cPhysicalMonitors);
+	BOOL bSuccess = GetNumberOfPhysicalMonitorsFromHMONITOR(hMon, &numberPhysicalMonitors);
 
 	if (bSuccess) {
 		printf("got some bloody monitors\n");
 
-		// get the physical monitors from the raw data?
-		pPhysicalMonitors = (LPPHYSICAL_MONITOR)malloc(cPhysicalMonitors* sizeof(PHYSICAL_MONITOR));
+		// get the physical monitors from the raw data?, this function seems to be the problem
+		pPhysicalMonitors = (LPPHYSICAL_MONITOR)malloc(numberPhysicalMonitors* sizeof(PHYSICAL_MONITOR));
 
 		if (pPhysicalMonitors != NULL) {
-			// focus here <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-			wprintf(L"Physical monitor: '%s' (handle = 0x%X)\n", pPhysicalMonitors[0].szPhysicalMonitorDescription, pPhysicalMonitors[0].hPhysicalMonitor);
-
-			// adds the monitor handle to the vector
-			hMonitors.push_back(pPhysicalMonitors[0].hPhysicalMonitor);
-
-			PrintMonitorBrightness(pPhysicalMonitors[0].hPhysicalMonitor);
+			printf("found %d physical monitors",numberPhysicalMonitors);
 		} else {
-			printf("but physical monitors were null\n");
+			printf("no physical monitors found or could not be counted\n");
 		}
 	}
 	else {
 		printf("failed to get any monitors ");
 		printf("error: %d \n", GetLastError());
+	}
+
+	if (bSuccess) {
+		bSuccess = GetPhysicalMonitorsFromHMONITOR(hMon, numberPhysicalMonitors, pPhysicalMonitors);
+		if (bSuccess) {
+			// focus here <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			printf("Physical monitor: '%s' (handle = 0x%X)\n", pPhysicalMonitors[0].szPhysicalMonitorDescription, pPhysicalMonitors[0].hPhysicalMonitor);
+
+			// adds the monitor handle to the vector
+			hMonitors.push_back(pPhysicalMonitors[0].hPhysicalMonitor);
+
+			PrintMonitorBrightness(pPhysicalMonitors[0].hPhysicalMonitor);
+		}
 	}
 
 	// we return true to signal that we want to keep looking
