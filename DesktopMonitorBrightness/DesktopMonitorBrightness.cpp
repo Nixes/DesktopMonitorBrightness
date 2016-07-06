@@ -13,11 +13,6 @@ std::vector<HANDLE>  physicalMonitorHandles;
 
 std::vector<float>  monitorBrightnessScaleFactor;
 
-// this is a function that attempts to fade between the current brightness setting and the target brightness setting.
-// only enable this if you are sure your monitors are capable and don't break / blow up
-void BrightnessSetFade() {
-}
-
 // pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
 void PrintMonitorBrightness(HANDLE physmonitor) {
 	DWORD min = 0;
@@ -29,7 +24,7 @@ void PrintMonitorBrightness(HANDLE physmonitor) {
 	printf("Monitor Brightness values {min %d, current %d, max %d }\n", min, current, max);
 }
 
-void AddMonitorScaleFactor(HANDLE physmonitor) {
+bool AddMonitorScaleFactor(HANDLE physmonitor) {
 	DWORD min = 0;
 	DWORD current = 0;
 	DWORD max = 0;
@@ -40,9 +35,11 @@ void AddMonitorScaleFactor(HANDLE physmonitor) {
 		brightnessScaleFactor = (float)max / 100;
 		printf("Monitor Brightness values {min %d, current %d, max %d, scalefactor %g }\n", min, current, max,brightnessScaleFactor);
 		monitorBrightnessScaleFactor.push_back(brightnessScaleFactor);
+		return true;
 	}
 	else {
 		printf("Failed to obtain monitor brightness settings!\n This can be caused by querying the current brightness of a given display too soon after it was last read or changed.");
+		return false;
 	}
 }
 
@@ -92,7 +89,9 @@ void getMonitorHandles() {
 	// while this function does not return anything the results are found in physicalMonitorHandles
 
 	for each (HANDLE monitor in physicalMonitorHandles) {
-		AddMonitorScaleFactor(monitor);
+		if (!AddMonitorScaleFactor(monitor)) {
+			exit(EXIT_FAILURE);
+		}
 	}
 }
 
@@ -113,6 +112,21 @@ void setAllMonitorsBrightness(int brightness) {
 	}
 }
 
+// this is a function that attempts to fade between the current brightness setting and the target brightness setting.
+// only enable this if you are sure your monitors are capable and don't break / blow up
+void BrightnessSetFade(int targetBrightness, int initialBrightness) {
+	for (int currentBrightness = initialBrightness; currentBrightness != targetBrightness;) {
+		if (currentBrightness < targetBrightness) {
+			currentBrightness++;
+		}
+		else if (currentBrightness > targetBrightness) {
+			currentBrightness--;
+		}
+		setAllMonitorsBrightness(currentBrightness);
+		//Sleep(1);
+	}
+}
+
 
 int main(int argc, const char* argv[]) {
 	printf("DesktopMonitorBrightness, to use include arg1 brightness as a value between 0 and 100\n");
@@ -124,7 +138,8 @@ int main(int argc, const char* argv[]) {
 
 		int brightness;
 		if (ss >> brightness) { // checks to make sure conversion to integer was valid
-			setAllMonitorsBrightness(brightness);
+			//setAllMonitorsBrightness(brightness);
+			BrightnessSetFade(100, 0);
 		} else {
 			printf("Unable to parse brightness argument!\n");
 			return 1;

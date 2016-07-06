@@ -1,12 +1,12 @@
-﻿Build started 6/07/2016 1:23:24 PM.
+﻿Build started 6/07/2016 2:07:40 PM.
      1>Project "C:\docs\programming\c cpp\windows only\DesktopMonitorBrightness\DesktopMonitorBrightness\DesktopMonitorBrightness.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\DesktopMonitorBrightness.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt DesktopMonitorBrightness.cpp
          DesktopMonitorBrightness.cpp
-     1>DesktopMonitorBrightness.cpp(27): warning C4800: '_BOOL' : forcing value to bool 'true' or 'false' (performance warning)
-     1>DesktopMonitorBrightness.cpp(38): warning C4800: '_BOOL' : forcing value to bool 'true' or 'false' (performance warning)
-     1>DesktopMonitorBrightness.cpp(101): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>DesktopMonitorBrightness.cpp(111): warning C4018: '<' : signed/unsigned mismatch
+     1>DesktopMonitorBrightness.cpp(22): warning C4800: '_BOOL' : forcing value to bool 'true' or 'false' (performance warning)
+     1>DesktopMonitorBrightness.cpp(33): warning C4800: '_BOOL' : forcing value to bool 'true' or 'false' (performance warning)
+     1>DesktopMonitorBrightness.cpp(100): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>DesktopMonitorBrightness.cpp(110): warning C4018: '<' : signed/unsigned mismatch
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\docs\programming\c cpp\windows only\DesktopMonitorBrightness\Release\DesktopMonitorBrightness.exe" /INCREMENTAL:NO /NOLOGO Dxva2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\docs\programming\c cpp\windows only\DesktopMonitorBrightness\Release\DesktopMonitorBrightness.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\docs\programming\c cpp\windows only\DesktopMonitorBrightness\Release\DesktopMonitorBrightness.lib" /MACHINE:X86 /SAFESEH Release\DesktopMonitorBrightness.obj
          Release\stdafx.obj
@@ -17,4 +17,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.53
+Time Elapsed 00:00:00.61
