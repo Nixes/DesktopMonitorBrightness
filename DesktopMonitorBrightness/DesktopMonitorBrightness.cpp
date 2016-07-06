@@ -42,15 +42,13 @@ void AddMonitorScaleFactor(HANDLE physmonitor) {
 		monitorBrightnessScaleFactor.push_back(brightnessScaleFactor);
 	}
 	else {
-		printf("failed to obtain monitor brightness settings");
+		printf("Failed to obtain monitor brightness settings!\n This can be caused by querying the current brightness of a given display too soon after it was last read or changed.");
 	}
 }
 
 
 // this gets called each time EnumDisplayMonitors has another monitor to process
 static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) {
-	printf("monitor callback run\n");
-
 	// these variables are intermediaries for GetNumberOfPhysicalMonitorsFromHMONITOR
 	DWORD numberPhysicalMonitors;
 	LPPHYSICAL_MONITOR pPhysicalMonitors = NULL;
@@ -60,13 +58,11 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 	BOOL bSuccess = GetNumberOfPhysicalMonitorsFromHMONITOR(hMon, &numberPhysicalMonitors);
 
 	if (bSuccess) {
-		printf("got some bloody monitors\n");
-
 		// this allocates space for the physical monitor handlers based on the number of physical monitors detected
 		pPhysicalMonitors = (LPPHYSICAL_MONITOR)malloc(numberPhysicalMonitors* sizeof(PHYSICAL_MONITOR));
 
 		if (pPhysicalMonitors != NULL) {
-			printf("found %d physical monitors",numberPhysicalMonitors);
+			printf("Found %d physical monitors in this HMONITOR\n",numberPhysicalMonitors);
 		} else {
 			printf("no physical monitors found or could not be counted\n");
 		}
@@ -109,7 +105,7 @@ void setBrightness(HANDLE hMonitor, int brightness, float scalefactor) {
 
 void setAllMonitorsBrightness(int brightness) {
 	// will set the brightness of all detected monitors
-	printf("Setting all monitor brightness to: %i %",brightness);
+	printf("Setting all monitor brightness to: %i % \n",brightness);
 
 	// iterate the vector of monitor handles, and for each monitor set the brightness
 	for (int i = 0; i < physicalMonitorHandles.size();i++) {
@@ -119,6 +115,7 @@ void setAllMonitorsBrightness(int brightness) {
 
 
 int main(int argc, const char* argv[]) {
+	printf("DesktopMonitorBrightness, to use include arg1 brightness as a value between 0 and 100\n");
 
 	getMonitorHandles();
 
@@ -127,11 +124,11 @@ int main(int argc, const char* argv[]) {
 
 		int brightness;
 		if (ss >> brightness) { // checks to make sure conversion to integer was valid
-			printf("Monitor arg was %i",brightness);
 			setAllMonitorsBrightness(brightness);
 		} else {
-			printf("Unable to parse brightness argument");
+			printf("Unable to parse brightness argument!\n");
+			return 1;
 		}
 	}
-	//return 0;
+	return 0;
 }
