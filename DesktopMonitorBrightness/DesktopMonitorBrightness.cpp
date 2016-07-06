@@ -11,6 +11,8 @@
 
 std::vector<HANDLE>  physicalMonitorHandles;
 
+std::vector<float>  monitorBrightnessScaleFactor;
+
 
 // pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
 void PrintMonitorBrightness(HANDLE physmonitor) {
@@ -21,6 +23,23 @@ void PrintMonitorBrightness(HANDLE physmonitor) {
 	bool bSuccess = GetMonitorBrightness(physmonitor, &min, &current, &max);
 
 	printf("Monitor Brightness values {min %d, current %d, max %d }\n", min, current, max);
+}
+
+void AddMonitorScaleFactor(HANDLE physmonitor) {
+	DWORD min = 0;
+	DWORD current = 0;
+	DWORD max = 0;
+	float brightnessScaleFactor = 0;
+
+	bool bSuccess = GetMonitorBrightness(physmonitor, &min, &current, &max);
+	if (bSuccess) {
+		brightnessScaleFactor = (float)max / 100;
+		printf("Monitor Brightness values {min %d, current %d, max %d, scalefactor %g }\n", min, current, max,brightnessScaleFactor);
+		monitorBrightnessScaleFactor.push_back(brightnessScaleFactor);
+	}
+	else {
+		printf("failed to obtain monitor brightness settings");
+	}
 }
 
 
@@ -59,9 +78,7 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 			printf("Physical monitor: '%s' (handle = 0x%X)\n", pPhysicalMonitors[0].szPhysicalMonitorDescription, pPhysicalMonitors[0].hPhysicalMonitor);
 
 			// adds the monitor handle to the vector
-			hMonitors.push_back(pPhysicalMonitors[0].hPhysicalMonitor);
-
-			PrintMonitorBrightness(pPhysicalMonitors[0].hPhysicalMonitor);
+			physicalMonitorHandles.push_back(pPhysicalMonitors[0].hPhysicalMonitor);
 		}
 	}
 
@@ -69,41 +86,40 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 	return true;
 }
 
-void getMonitorHandle() {
-	//HWND hWnd;
-
-	// Get the monitor handle.
-
-	// this only gets the monitor of the current window, this is not helpfull
-	// hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTOPRIMARY);
-
+void getMonitorHandles() {
 	// this function is an odd beast
-	EnumDisplayMonitors(0, 0, MonitorEnum, 0); // unsure what this end bit is doing, requires some testing
+	EnumDisplayMonitors(0, 0, MonitorEnum, 0);
+	// while this function does not return anything the results are found in physicalMonitorHandles
 
-	/*for each (HANDLE monitor in hMonitors) {
-		PrintMonitorBrightness(monitor);
-
-	}*/
-
+	for each (HANDLE monitor in physicalMonitorHandles) {
+		AddMonitorScaleFactor(monitor);
+	}
 }
 
 
-void setBrightness(HMONITOR hMonitor, int brightness) {
-	DWORD dwNewBrightness = (DWORD)brightness;
+void setBrightness(HANDLE hMonitor, int brightness, float scalefactor) {
+	int calculatedBrightness = (float)brightness * scalefactor;
+	DWORD dwNewBrightness = (DWORD)calculatedBrightness;
 	SetMonitorBrightness(hMonitor, dwNewBrightness);
 }
 
-void setAllBrightness(int brightness) {
+void setAllMonitorsBrightness(int brightness) {
 	// will set the brightness of all detected monitors
+	printf("Setting all monitor brightness to: %i %",brightness);
 
 	// iterate the vector of monitor handles, and for each monitor set the brightness
-	for each (HMONITOR monitor in hMonitors) {
-		setBrightness(monitor, brightness);
+	for (int i = 0; i < physicalMonitorHandles.size();i++) {
+		setBrightness(physicalMonitorHandles[i], brightness, monitorBrightnessScaleFactor[i]);
 	}
 }
 
 
 int _tmain(int argc, _TCHAR* argv[]) {
-	getMonitorHandle();
+
+	getMonitorHandles();
+
+	if (argc > 1) {
+		setAllMonitorsBrightness((int)argv[0]);
+	}
 	//return 0;
 }
