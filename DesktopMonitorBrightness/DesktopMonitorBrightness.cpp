@@ -13,6 +13,8 @@ std::vector<HANDLE>  physicalMonitorHandles;
 
 std::vector<float>  monitorBrightnessScaleFactor;
 
+std::vector<float>  currentMonitorBrightness;
+
 // pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
 void PrintMonitorBrightness(HANDLE physmonitor) {
 	DWORD min = 0;
@@ -29,16 +31,19 @@ bool AddMonitorScaleFactor(HANDLE physmonitor) {
 	DWORD current = 0;
 	DWORD max = 0;
 	float brightnessScaleFactor = 0;
+	float currentScaledBrightness = 0;
 
 	bool bSuccess = GetMonitorBrightness(physmonitor, &min, &current, &max);
 	if (bSuccess) {
 		brightnessScaleFactor = (float)max / 100;
-		printf("Monitor Brightness values {min %d, current %d, max %d, scalefactor %g }\n", min, current, max,brightnessScaleFactor);
+		currentScaledBrightness = (float)current / brightnessScaleFactor;
+		printf("Monitor Brightness values {min %d, current %d, max %d, scalefactor %g, currentscaled %g }\n", min, current, max, brightnessScaleFactor, currentScaledBrightness);
 		monitorBrightnessScaleFactor.push_back(brightnessScaleFactor);
+		currentMonitorBrightness.push_back(currentScaledBrightness);
 		return true;
 	}
 	else {
-		printf("Failed to obtain monitor brightness settings!\n This can be caused by querying the current brightness of a given display too soon after it was last read or changed.");
+		printf("Failed to obtain monitor brightness settings!\n This can be caused by querying the current brightness of a given display too soon after it was last read or changed. Or by monitors that don't support this property.\n");
 		return false;
 	}
 }
@@ -108,13 +113,14 @@ void setAllMonitorsBrightness(int brightness) {
 
 	// iterate the vector of monitor handles, and for each monitor set the brightness
 	for (int i = 0; i < physicalMonitorHandles.size();i++) {
+		// according to ms docs, this takes 50ms to return
 		setBrightness(physicalMonitorHandles[i], brightness, monitorBrightnessScaleFactor[i]);
 	}
 }
 
 // this is a function that attempts to fade between the current brightness setting and the target brightness setting.
-// only enable this if you are sure your monitors are capable and don't break / blow up
-void BrightnessSetFade(int targetBrightness, int initialBrightness) {
+// no delay required given it takes 50ms per screen to set its brightness
+void SetBrightnessFade(int targetBrightness, int initialBrightness) {
 	for (int currentBrightness = initialBrightness; currentBrightness != targetBrightness;) {
 		if (currentBrightness < targetBrightness) {
 			currentBrightness++;
@@ -123,7 +129,6 @@ void BrightnessSetFade(int targetBrightness, int initialBrightness) {
 			currentBrightness--;
 		}
 		setAllMonitorsBrightness(currentBrightness);
-		//Sleep(1);
 	}
 }
 
@@ -139,7 +144,7 @@ int main(int argc, const char* argv[]) {
 		int brightness;
 		if (ss >> brightness) { // checks to make sure conversion to integer was valid
 			//setAllMonitorsBrightness(brightness);
-			BrightnessSetFade(100, 0);
+			SetBrightnessFade(brightness, currentMonitorBrightness[0]);
 		} else {
 			printf("Unable to parse brightness argument!\n");
 			return 1;
