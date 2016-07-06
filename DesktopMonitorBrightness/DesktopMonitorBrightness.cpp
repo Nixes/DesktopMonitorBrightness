@@ -119,7 +119,7 @@ void setAllMonitorsBrightness(int brightness) {
 }
 
 // this is a function that attempts to fade between the current brightness setting and the target brightness setting.
-// no delay required given it takes 50ms per screen to set its brightness
+// no delay required given it takes 50ms per screen to set its brightness, thus TAKES LONGER THE MORE SCREENS CONNECTED
 void SetBrightnessFade(int targetBrightness, int initialBrightness) {
 	for (int currentBrightness = initialBrightness; currentBrightness != targetBrightness;) {
 		if (currentBrightness < targetBrightness) {
