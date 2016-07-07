@@ -112,9 +112,10 @@ void setAllMonitorsBrightness(int brightness) {
 	printf("Setting all monitor brightness to: %i % \n",brightness);
 
 	// iterate the vector of monitor handles, and for each monitor set the brightness
-	for (int i = 0; i < physicalMonitorHandles.size();i++) {
+	for (unsigned int i = 0; i < physicalMonitorHandles.size();i++) {
 		// according to ms docs, this takes 50ms to return
 		setBrightness(physicalMonitorHandles[i], brightness, monitorBrightnessScaleFactor[i]);
+		currentMonitorBrightness[i] = brightness;
 	}
 }
 
@@ -134,27 +135,50 @@ void SetBrightnessFade(int targetBrightness, int initialBrightness) {
 
 float GetFloatHoursNow() {
 	// current time
-	std::time_t now = std::time(0);
-	struct tm * tm_now;
-	tm_now = localtime(&now);
-
-	float currTimeHours = (float)tm_now->tm_hour + ((float)tm_now->tm_sec / 60.0);
+	std::time_t now = std::time(NULL);
+	struct tm tm_now;
+	float currTimeHours = 0;
+	try {
+		localtime_s(&tm_now,&now);
+		currTimeHours = (float)tm_now.tm_hour + ((float)tm_now.tm_min / 60.0);
+	} catch (int e) {
+		printf( "An exception occurred. Exception Nr. d% \n",e);
+	}
 	return currTimeHours;
 }
 
-void SetBasedOnTimeOfDay() {
+float GetSunTimeRatio() {
 	// sunrise in 24 decimal hour time
-	int sunrisetime_hours = 7;
+	float sunrisetime_hours = 7.00;
 	// sunset in 24 decimal hour time
-	int sunsettime_hours = 17;
+	float sunsettime_hours = 17.00;
 	// time range between the two
-	int lightrange = sunsettime_hours - sunrisetime_hours;
+	float lightrange = sunsettime_hours - sunrisetime_hours;
 
+	float currenttime = GetFloatHoursNow();
+	// value betweem 1 and zero defining amounnt of day progressed
+	float ratio = (currenttime - sunrisetime_hours) / lightrange;
+	// clamp the get float hours to min and max
+	if (ratio < 0) {
+		ratio = 0;
+	}
+	else if (ratio > 1) {
+		ratio = 1;
+	}
 
+	// now calculate sine based on this
 
+	printf("DEBUG: Set Time Of Day {sunrisetime: %g, sunsettime %g, lightrange: %g, currenttime: %g, ratio: %g}\n", sunrisetime_hours, sunsettime_hours, lightrange, currenttime, ratio);
+	return ratio;
+}
+
+void SetBasedOnTimeOfDay(int polling_time_secs) {
 	while (true) {
+		int sineresult = round(sin(GetSunTimeRatio()  * PI) * 100);
+		printf("Sine func result: %i\n", sineresult);
 
-		Sleep(1000);
+		SetBrightnessFade(sineresult, currentMonitorBrightness[0]);
+		Sleep(1000 * polling_time_secs);
 	}
 }
 
@@ -163,6 +187,9 @@ int main(int argc, const char* argv[]) {
 	printf("DesktopMonitorBrightness, to use include arg1 brightness as a value between 0 and 100\n");
 
 	getMonitorHandles();
+
+	//printf("Float hours %g \n", GetFloatHoursNow());
+	SetBasedOnTimeOfDay(10);
 
 	if (argc > 1) {
 		std::istringstream ss(argv[1]);

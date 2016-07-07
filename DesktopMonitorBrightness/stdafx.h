@@ -20,3 +20,7 @@
 #include <vector>
 
 #include <ctime> // used for dealing with system time
+
+#include <math.h> // used for sin functon
+
+#define PI 3.14159265 // can't belive we still need to do this in 2016
