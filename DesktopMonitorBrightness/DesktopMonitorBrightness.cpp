@@ -182,6 +182,19 @@ void SetBasedOnTimeOfDay(int polling_time_secs) {
 	}
 }
 
+struct settings {
+	float sunrise;
+	float sunset;
+	int polling_time;
+	int max_global_brightness;
+	int min_global_brightness;
+};
+
+settings RestoreSettings () {
+	settings new_settings;
+
+	return new_settings;
+}
 
 int main(int argc, const char* argv[]) {
 	printf("DesktopMonitorBrightness, to use include arg1 brightness as a value between 0 and 100\n");
