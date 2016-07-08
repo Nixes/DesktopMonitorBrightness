@@ -4,5 +4,8 @@
 *.log
 *.pdb
 *.obj
+*.iobj
 *.ipdb
 *.pdb
+*.pch
+*.ipch
