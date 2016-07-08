@@ -38,7 +38,7 @@ void PrintMonitorBrightness(HANDLE physmonitor) {
 
 	bool bSuccess = GetMonitorBrightness(physmonitor, &min, &current, &max);
 
-	std::cout << "Monitor Brightness values{ min: " << min << ", :current " << current << ", max: " << max << "}\n";
+	std::cout << "Monitor Brightness values{ min: " << min << ", current: " << current << ", max: " << max << "}\n";
 }
 
 bool AddMonitorScaleFactor(HANDLE physmonitor) {
@@ -52,7 +52,7 @@ bool AddMonitorScaleFactor(HANDLE physmonitor) {
 	if (bSuccess) {
 		brightnessScaleFactor = (float)max / 100;
 		currentScaledBrightness = (float)current / brightnessScaleFactor;
-		std::cout << "Monitor Brightness values {min " << min << ", current" << current << ", max" << max << ", scalefactor" << brightnessScaleFactor << "currentscaled" << currentScaledBrightness << "}\n";
+		std::cout << "Monitor Brightness values {min: " << min << ", current: " << current << ", max: " << max << ", scalefactor: " << brightnessScaleFactor << ", currentscaled: " << currentScaledBrightness << "}\n";
 
 		monitorBrightnessScaleFactor.push_back(brightnessScaleFactor);
 		currentMonitorBrightness.push_back(currentScaledBrightness);
@@ -104,7 +104,7 @@ static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPA
 	return true;
 }
 
-void getMonitorHandles() {
+void GetMonitorHandles() {
 	// this function is an odd beast
 	EnumDisplayMonitors(0, 0, MonitorEnum, 0);
 	// while this function does not return anything the results are found in physicalMonitorHandles
@@ -117,19 +117,19 @@ void getMonitorHandles() {
 }
 
 
-void setBrightness(HANDLE hMonitor, int brightness, float scalefactor) {
+void SetBrightness(HANDLE hMonitor, int brightness, float scalefactor) {
 	int calculatedBrightness = (float)brightness * scalefactor;
 	DWORD dwNewBrightness = (DWORD)calculatedBrightness;
 	SetMonitorBrightness(hMonitor, dwNewBrightness);
 }
 
-void setAllMonitorsBrightness(int brightness) {
+void SetAllMonitorsBrightness(int brightness) {
 	// will set the brightness of all detected monitors
 	std::cout << "Setting all monitor brightness to: " << brightness << "\n";
 	// iterate the vector of monitor handles, and for each monitor set the brightness
 	for (unsigned int i = 0; i < physicalMonitorHandles.size();i++) {
 		// according to ms docs, this takes 50ms to return
-		setBrightness(physicalMonitorHandles[i], brightness, monitorBrightnessScaleFactor[i]);
+		SetBrightness(physicalMonitorHandles[i], brightness, monitorBrightnessScaleFactor[i]);
 		currentMonitorBrightness[i] = brightness;
 	}
 }
@@ -146,7 +146,7 @@ void SetBrightnessFade(int targetBrightness, int initialBrightness) {
 			else if (currentBrightness > targetBrightness) {
 				currentBrightness--;
 			}
-			setAllMonitorsBrightness(currentBrightness);
+			SetAllMonitorsBrightness(currentBrightness);
 		}
 	}
 }
@@ -270,7 +270,7 @@ int main(int argc, const char* argv[]) {;
 	std::cout << "DesktopMonitorBrightness, to use include arg1 brightness as a value between 0 and 100\n";
 	settings current_settings = RestoreSettings("settings.json");
 
-	getMonitorHandles();
+	GetMonitorHandles();
 
 	SetBasedOnTimeOfDay(current_settings);
 
