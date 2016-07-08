@@ -15,6 +15,21 @@ std::vector<float>  monitorBrightnessScaleFactor;
 
 std::vector<float>  currentMonitorBrightness;
 
+struct settings {
+	// sunrise in 24 decimal hour time
+	float sunrise;
+	// sunset in 24 decimal hour time
+	float sunset;
+	// time to wait between updating brightness
+	int polling_time;
+
+	// maximum brightness to be set
+	int max_global_brightness;
+	// minimum brightness to be set
+	int min_global_brightness;
+};
+
+
 // pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
 void PrintMonitorBrightness(HANDLE physmonitor) {
 	DWORD min = 0;
@@ -122,14 +137,17 @@ void setAllMonitorsBrightness(int brightness) {
 // this is a function that attempts to fade between the current brightness setting and the target brightness setting.
 // no delay required given it takes 50ms per screen to set its brightness, thus TAKES LONGER THE MORE SCREENS CONNECTED
 void SetBrightnessFade(int targetBrightness, int initialBrightness) {
-	for (int currentBrightness = initialBrightness; currentBrightness != targetBrightness;) {
-		if (currentBrightness < targetBrightness) {
-			currentBrightness++;
+	// only update if the current brightness is not the same as the desired brightmess
+	if (targetBrightness != initialBrightness) {
+		for (int currentBrightness = initialBrightness; currentBrightness != targetBrightness;) {
+			if (currentBrightness < targetBrightness) {
+				currentBrightness++;
+			}
+			else if (currentBrightness > targetBrightness) {
+				currentBrightness--;
+			}
+			setAllMonitorsBrightness(currentBrightness);
 		}
-		else if (currentBrightness > targetBrightness) {
-			currentBrightness--;
-		}
-		setAllMonitorsBrightness(currentBrightness);
 	}
 }
 
@@ -161,7 +179,7 @@ float GetSunTimeRatio(settings current_settings) {
 	else if (ratio > 1) {
 		ratio = 1;
 	}
-	printf("DEBUG: Set Time Of Day {sunrisetime: %g, sunsettime %g, lightrange: %g, currenttime: %g, ratio: %g}\n", sunrisetime_hours, sunsettime_hours, lightrange, currenttime, ratio);
+	printf("DEBUG: Set Time Of Day {sunrisetime: %g, sunsettime %g, lightrange: %g, currenttime: %g, ratio: %g}\n", current_settings.sunrise, current_settings.sunset, lightrange, currenttime, ratio);
 	return ratio;
 }
 
@@ -174,21 +192,6 @@ void SetBasedOnTimeOfDay(settings current_settings) {
 		Sleep(1000 * current_settings.polling_time);
 	}
 }
-
-struct settings {
-	// sunrise in 24 decimal hour time
-	float sunrise;
-	// sunset in 24 decimal hour time
-	float sunset;
-	// time to wait between updating brightness
-	int polling_time;
-
-	// maximum brightness to be set
-	int max_global_brightness;
-	// minimum brightness to be set
-	int min_global_brightness;
-};
-
 
 std::string LoadTextFile(std::string inFileName) {
 	std::ifstream inFile;
