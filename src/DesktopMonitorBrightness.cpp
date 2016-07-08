@@ -171,13 +171,11 @@ float GetSunTimeRatio(settings current_settings) {
 }
 
 void SetBasedOnTimeOfDay(settings current_settings) {
-	while (true) {
-		int sineresult = round(sin(GetSunTimeRatio(current_settings)  * PI) * 100);
-		std::cout << "Sine func result: " << sineresult << "\n";
+	int sineresult = round(sin(GetSunTimeRatio(current_settings)  * PI) * 100);
+	std::cout << "Sine func result: " << sineresult << "\n";
 
-		SetBrightnessFade(sineresult, currentMonitorBrightness[0]);
-		Sleep(1000 * current_settings.polling_time);
-	}
+	SetBrightnessFade(sineresult, currentMonitorBrightness[0]);
+	Sleep(1000 * current_settings.polling_time);
 }
 
 std::string LoadTextFile(std::string inFileName) {

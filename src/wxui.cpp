@@ -50,9 +50,6 @@ bool MyApp::OnInit()
 
 	GetMonitorHandles();
 
-	//SetBasedOnTimeOfDay(current_settings);
-
-
     if ( !wxApp::OnInit() )
         return false;
 
@@ -71,6 +68,8 @@ bool MyApp::OnInit()
 
 	// don't bother showing the dialog yet
     //gs_dialog->Show(true);
+
+	//SetBasedOnTimeOfDay(current_settings);
 
     return true;
 }
