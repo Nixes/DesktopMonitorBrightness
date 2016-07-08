@@ -175,7 +175,6 @@ void SetBasedOnTimeOfDay(settings current_settings) {
 	std::cout << "Sine func result: " << sineresult << "\n";
 
 	SetBrightnessFade(sineresult, currentMonitorBrightness[0]);
-	Sleep(1000 * current_settings.polling_time);
 }
 
 std::string LoadTextFile(std::string inFileName) {

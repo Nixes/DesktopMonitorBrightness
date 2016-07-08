@@ -15,6 +15,7 @@
     #include "../sample.xpm"
 #endif
 
+// another alternative application icon
 #include "smile.xpm"
 
 #include "wx/taskbar.h"
