@@ -147,17 +147,13 @@ float GetFloatHoursNow() {
 	return currTimeHours;
 }
 
-float GetSunTimeRatio() {
-	// sunrise in 24 decimal hour time
-	float sunrisetime_hours = 7.00;
-	// sunset in 24 decimal hour time
-	float sunsettime_hours = 17.00;
-	// time range between the two
-	float lightrange = sunsettime_hours - sunrisetime_hours;
+float GetSunTimeRatio(settings current_settings) {
+	// time range between sunerise and sunset
+	float lightrange = current_settings.sunset - current_settings.sunrise;
 
 	float currenttime = GetFloatHoursNow();
 	// value betweem 1 and zero defining amounnt of day progressed
-	float ratio = (currenttime - sunrisetime_hours) / lightrange;
+	float ratio = (currenttime - current_settings.sunrise) / lightrange;
 	// clamp the get float hours to min and max
 	if (ratio < 0) {
 		ratio = 0;
@@ -165,28 +161,31 @@ float GetSunTimeRatio() {
 	else if (ratio > 1) {
 		ratio = 1;
 	}
-
-	// now calculate sine based on this
-
 	printf("DEBUG: Set Time Of Day {sunrisetime: %g, sunsettime %g, lightrange: %g, currenttime: %g, ratio: %g}\n", sunrisetime_hours, sunsettime_hours, lightrange, currenttime, ratio);
 	return ratio;
 }
 
-void SetBasedOnTimeOfDay(int polling_time_secs) {
+void SetBasedOnTimeOfDay(settings current_settings) {
 	while (true) {
-		int sineresult = round(sin(GetSunTimeRatio()  * PI) * 100);
+		int sineresult = round(sin(GetSunTimeRatio(current_settings)  * PI) * 100);
 		printf("Sine func result: %i\n", sineresult);
 
 		SetBrightnessFade(sineresult, currentMonitorBrightness[0]);
-		Sleep(1000 * polling_time_secs);
+		Sleep(1000 * current_settings.polling_time);
 	}
 }
 
 struct settings {
+	// sunrise in 24 decimal hour time
 	float sunrise;
+	// sunset in 24 decimal hour time
 	float sunset;
+	// time to wait between updating brightness
 	int polling_time;
+
+	// maximum brightness to be set
 	int max_global_brightness;
+	// minimum brightness to be set
 	int min_global_brightness;
 };
 
@@ -272,7 +271,7 @@ int main(int argc, const char* argv[]) {
 	//printf("Text File contents %s",LoadTextFile("test.txt"));
 
 	//printf("Float hours %g \n", GetFloatHoursNow());
-	SetBasedOnTimeOfDay(10);
+	SetBasedOnTimeOfDay(current_settings);
 
 	if (argc > 1) {
 		std::istringstream ss(argv[1]);
