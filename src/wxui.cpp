@@ -113,7 +113,8 @@ MyDialog::MyDialog(const wxString& title)
                       ), flags);
 
 	// add slider
-	sizerTop->Add(new wxSlider(this,wxID_ANY,0,0,100) , flags);
+
+	sizerTop->Add(new wxSlider(this,wxID_ANY,0,0,100) , wxSizerFlags().Expand() );
 
     sizerTop->AddStretchSpacer()->SetMinSize(200, 50);
 
