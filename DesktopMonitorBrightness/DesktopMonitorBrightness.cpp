@@ -190,8 +190,72 @@ struct settings {
 	int min_global_brightness;
 };
 
-settings RestoreSettings () {
-	settings new_settings;
+
+std::string LoadTextFile(std::string inFileName) {
+	std::ifstream inFile;
+	inFile.open(inFileName);
+
+	std::stringstream strStream;
+	strStream << inFile.rdbuf(); // read file into stringstream
+	std::string str = strStream.str();// then convert stringstream into a real string
+	inFile.close();
+
+	return str;
+}
+
+void SaveTextFile(std::string outFileName,std::string outputstring) {
+	std::ofstream outFile;
+	outFile.open(outFileName);
+	
+	outFile << outputstring;
+	outFile.close();
+}
+
+bool FileExists(std::string fileLocation) {
+	std::ifstream inFile(fileLocation);
+	return inFile.good();
+}
+
+// unused until a gui is implemented
+// convert from settings struct to json file
+void SaveSettings(settings current) {
+	json j;
+
+	j["sunrise"] = current.sunrise;
+	j["sunset"] = current.sunset;
+	j["polling_time"] = current.polling_time;
+	j["max_global_brightness"] = current.max_global_brightness;
+	j["min_global_brightness"] = current.min_global_brightness;
+
+	std::string settingsraw = j.dump();
+
+	SaveTextFile("settings.json", settingsraw);
+	// then write string to file
+}
+
+// convert from json file to settings struct
+settings RestoreSettings(std::string settings_location) {
+	// provide some defaults
+	settings new_settings{ 7.00 ,14.00 ,60 ,0,100 };
+
+
+	if (FileExists(settings_location)) {
+		std::string configfileraw = LoadTextFile(settings_location);
+		std::cout << configfileraw;
+
+		json j3 = json::parse(configfileraw);
+
+		new_settings.sunrise = j3["sunrise"];
+		new_settings.sunset = j3["sunset"];
+		new_settings.polling_time = j3["polling_time"];
+		new_settings.max_global_brightness = j3["max_global_brightness"];
+		new_settings.min_global_brightness = j3["min_global_brightness"];
+	}
+	else {
+		std::cout << "Failed to load config, making a new one based on defualts";
+		SaveSettings(new_settings);
+	}
+
 
 	return new_settings;
 }
@@ -200,6 +264,12 @@ int main(int argc, const char* argv[]) {
 	printf("DesktopMonitorBrightness, to use include arg1 brightness as a value between 0 and 100\n");
 
 	getMonitorHandles();
+
+	settings current_settings = RestoreSettings("settings.json");
+
+
+	//SaveTextFile("test.txt", "some test text\n and all\n that\n shit");
+	//printf("Text File contents %s",LoadTextFile("test.txt"));
 
 	//printf("Float hours %g \n", GetFloatHoursNow());
 	SetBasedOnTimeOfDay(10);

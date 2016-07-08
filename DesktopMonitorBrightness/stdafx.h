@@ -12,7 +12,11 @@
 #include <tchar.h>
 #include <sstream> // used for argument parsing
 
+#include <fstream> // used for config read / writing
+
 #include <windows.h>
+
+#include <ostream>
 
 
 #include <HighLevelMonitorConfigurationAPI.h>
@@ -24,3 +28,6 @@
 #include <math.h> // used for sin functon
 
 #define PI 3.14159265 // can't belive we still need to do this in 2016
+
+#include "json.hpp" // from https://github.com/nlohmann/json
+using json = nlohmann::json; // and its relevant namespace
