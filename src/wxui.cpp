@@ -2,13 +2,10 @@
 // For compilers that support precompilation, includes "wx.h".
 #include "wx/wxprec.h"
 
-#ifdef __BORLANDC__
-#pragma hdrstop
-#endif
 
-#ifndef WX_PRECOMP
+//#ifndef WX_PRECOMP
     #include "wx/wx.h"
-#endif
+//#endif
 
 // the application icon (under Windows it is in resources)
 #ifndef wxHAS_IMAGES_IN_RESOURCES
@@ -34,6 +31,9 @@
 // ----------------------------------------------------------------------------
 
 static MyDialog *gs_dialog = NULL;
+
+// this toggles the running of the SetBasedOnTimeOFDay loop
+static bool AutoBrightness = true;
 
 // ============================================================================
 // implementation
@@ -70,6 +70,9 @@ bool MyApp::OnInit()
 	// don't bother showing the dialog yet
     //gs_dialog->Show(true);
 
+	// setup some kind of wxTimer event and run the below within
+	//wxTimer auto_brightness_timer = new wxTimer();
+	//auto_brightness_timer.Start(1000 * current_settings.polling_time);
 	//SetBasedOnTimeOfDay(current_settings);
 
     return true;
@@ -110,7 +113,7 @@ MyDialog::MyDialog(const wxString& title)
                       ), flags);
 
 	// add slider
-	sizerTop->Add(new wxSlider() , flags);
+	sizerTop->Add(new wxSlider(this,wxID_ANY,0,0,100) , flags);
 
     sizerTop->AddStretchSpacer()->SetMinSize(200, 50);
 
@@ -217,16 +220,14 @@ void MyTaskBarIcon::OnMenuExit(wxCommandEvent& )
     gs_dialog->Close(true);
 }
 
-static bool check = true;
-
 void MyTaskBarIcon::OnMenuCheckmark(wxCommandEvent& )
 {
-    check = !check;
+	AutoBrightness = !AutoBrightness;
 }
 
 void MyTaskBarIcon::OnMenuUICheckmark(wxUpdateUIEvent &event)
 {
-    event.Check(check);
+    event.Check(AutoBrightness);
 }
 
 void MyTaskBarIcon::OnMenuSetNewIcon(wxCommandEvent&)
@@ -246,17 +247,19 @@ void MyTaskBarIcon::OnMenuSub(wxCommandEvent&)
 wxMenu *MyTaskBarIcon::CreatePopupMenu()
 {
     wxMenu *menu = new wxMenu;
-    menu->Append(PU_RESTORE, wxT("&Restore main window"));
+    menu->Append(PU_RESTORE, wxT("&Set Volume"));
     menu->AppendSeparator();
     menu->Append(PU_NEW_ICON, wxT("&Set New Icon"));
     menu->AppendSeparator();
-    menu->AppendCheckItem(PU_CHECKMARK, wxT("Test &check mark"));
+    menu->AppendCheckItem(PU_CHECKMARK, wxT("AutoBrightness"));
     menu->AppendSeparator();
+
     wxMenu *submenu = new wxMenu;
-    submenu->Append(PU_SUB1, wxT("One submenu"));
-    submenu->AppendSeparator();
-    submenu->Append(PU_SUB2, wxT("Another submenu"));
+		submenu->Append(PU_SUB1, wxT("One submenu"));
+		submenu->AppendSeparator();
+		submenu->Append(PU_SUB2, wxT("Another submenu"));
     menu->Append(PU_SUBMAIN, wxT("Submenu"), submenu);
+
     /* OSX has built-in quit menu for the dock menu, but not for the status item */
 #ifdef __WXOSX__ 
     if ( OSXIsStatusItem() )
