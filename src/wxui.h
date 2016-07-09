@@ -47,7 +47,7 @@ public:
 
 
 protected:
-	void OnSlider(wxCommandEvent& event);
+	void OnSlider(wxScrollEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnOK(wxCommandEvent& event);
     void OnExit(wxCommandEvent& event);

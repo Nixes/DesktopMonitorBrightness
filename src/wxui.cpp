@@ -85,7 +85,7 @@ bool MyApp::OnInit()
 // ----------------------------------------------------------------------------
 
 wxBEGIN_EVENT_TABLE(MyDialog, wxDialog)
-	EVT_SLIDER(5800, MyDialog::OnSlider)
+	EVT_COMMAND_SCROLL_CHANGED(5800, MyDialog::OnSlider)
     EVT_BUTTON(wxID_ABOUT, MyDialog::OnAbout)
     EVT_BUTTON(wxID_OK, MyDialog::OnOK)
     EVT_CLOSE(MyDialog::OnCloseWindow)
@@ -109,7 +109,7 @@ MyDialog::MyDialog(const wxString& title)
 
 	// add slider
 
-	sizerTop->Add(new wxSlider(this, 5800,0,0,100) , wxSizerFlags().Expand() );
+	sizerTop->Add(new wxSlider(this, 5800,50,0,100) , wxSizerFlags().Expand() );
 
     sizerTop->AddStretchSpacer()->SetMinSize(200, 50);
 
@@ -147,11 +147,15 @@ MyDialog::~MyDialog()
     delete m_taskBarIcon;
 }
 
-void MyDialog::OnSlider(wxCommandEvent& event) {
+void MyDialog::OnSlider(wxScrollEvent& event) {
 	wxEventType eventType = event.GetEventType();
-	//std::cout << "Event Type";
 
-	wxLogMessage(wxT("Slider event occured %d"),eventType);
+	int slider_value = event.GetPosition();
+
+	SetAllMonitorsBrightness(slider_value);
+	//wxLogMessage(wxT("Slider event: Scroll Changed: %d", event.GetValue() ));
+	//std::cout << "Event Type";
+	//wxLogMessage(wxT("Slider event occured %d"),eventType);
 }
 
 void MyDialog::OnAbout(wxCommandEvent& WXUNUSED(event))
