@@ -66,7 +66,7 @@ bool MyApp::OnInit()
     }
 
     // Create the main window
-    gs_dialog = new MyDialog(wxT("Main Brightness Dialog"));
+    gs_dialog = new MyDialog(wxT("Monitor Brightness"));
 
 	// don't bother showing the dialog yet
     //gs_dialog->Show(true);
@@ -209,12 +209,9 @@ enum
 wxBEGIN_EVENT_TABLE(MyTaskBarIcon, wxTaskBarIcon)
     EVT_MENU(PU_RESTORE, MyTaskBarIcon::OnMenuRestore)
     EVT_MENU(PU_EXIT,    MyTaskBarIcon::OnMenuExit)
-    EVT_MENU(PU_NEW_ICON,MyTaskBarIcon::OnMenuSetNewIcon)
     EVT_MENU(PU_CHECKMARK,MyTaskBarIcon::OnMenuCheckmark)
     EVT_UPDATE_UI(PU_CHECKMARK,MyTaskBarIcon::OnMenuUICheckmark)
     EVT_TASKBAR_LEFT_DCLICK  (MyTaskBarIcon::OnLeftButtonDClick)
-    EVT_MENU(PU_SUB1, MyTaskBarIcon::OnMenuSub)
-    EVT_MENU(PU_SUB2, MyTaskBarIcon::OnMenuSub)
 wxEND_EVENT_TABLE()
 
 void MyTaskBarIcon::OnMenuRestore(wxCommandEvent& )
@@ -237,18 +234,6 @@ void MyTaskBarIcon::OnMenuUICheckmark(wxUpdateUIEvent &event)
     event.Check(AutoBrightness);
 }
 
-void MyTaskBarIcon::OnMenuSetNewIcon(wxCommandEvent&)
-{
-    wxIcon icon(smile_xpm);
-
-    if (!SetIcon(icon, wxT("wxTaskBarIcon Sample - a different icon")))
-        wxMessageBox(wxT("Could not set new icon."));
-}
-
-void MyTaskBarIcon::OnMenuSub(wxCommandEvent&)
-{
-    wxMessageBox(wxT("You clicked on a submenu!"));
-}
 
 // Overridables
 wxMenu *MyTaskBarIcon::CreatePopupMenu()
@@ -256,16 +241,8 @@ wxMenu *MyTaskBarIcon::CreatePopupMenu()
     wxMenu *menu = new wxMenu;
     menu->Append(PU_RESTORE, wxT("&Set Volume"));
     menu->AppendSeparator();
-    menu->Append(PU_NEW_ICON, wxT("&Set New Icon"));
-    menu->AppendSeparator();
     menu->AppendCheckItem(PU_CHECKMARK, wxT("AutoBrightness"));
     menu->AppendSeparator();
-
-    wxMenu *submenu = new wxMenu;
-		submenu->Append(PU_SUB1, wxT("One submenu"));
-		submenu->AppendSeparator();
-		submenu->Append(PU_SUB2, wxT("Another submenu"));
-    menu->Append(PU_SUBMAIN, wxT("Submenu"), submenu);
 
     /* OSX has built-in quit menu for the dock menu, but not for the status item */
 #ifdef __WXOSX__ 
