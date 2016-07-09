@@ -45,8 +45,8 @@ public:
     MyDialog(const wxString& title);
     virtual ~MyDialog();
 
-
 protected:
+	void OnTimerTimeout(wxTimerEvent & event);
 	void OnSlider(wxScrollEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnOK(wxCommandEvent& event);

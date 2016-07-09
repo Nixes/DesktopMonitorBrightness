@@ -45,6 +45,8 @@ static bool AutoBrightness = true;
 
 wxIMPLEMENT_APP(MyApp);
 
+settings current_settings;
+
 bool MyApp::OnInit()
 {
 
@@ -65,14 +67,13 @@ bool MyApp::OnInit()
         );
     }
 
-    // Create the main window
+    // Create the Brightness change window
     gs_dialog = new MyDialog(wxT("Monitor Brightness"));
-
-	// don't bother showing the dialog yet
-    //gs_dialog->Show(true);
+	// but don't show it
 
 	// setup some kind of wxTimer event and run the below within
-	//wxTimer auto_brightness_timer = new wxTimer();
+
+
 	//auto_brightness_timer.Start(1000 * current_settings.polling_time);
 	//SetBasedOnTimeOfDay(current_settings);
 
@@ -85,6 +86,7 @@ bool MyApp::OnInit()
 // ----------------------------------------------------------------------------
 
 wxBEGIN_EVENT_TABLE(MyDialog, wxDialog)
+	EVT_TIMER(5801, MyDialog::OnTimerTimeout)
 	EVT_COMMAND_SCROLL(5800, MyDialog::OnSlider)
     EVT_BUTTON(wxID_ABOUT, MyDialog::OnAbout)
     EVT_BUTTON(wxID_OK, MyDialog::OnOK)
@@ -108,10 +110,7 @@ MyDialog::MyDialog(const wxString& title)
                       ), flags);
 
 	// add slider
-
 	sizerTop->Add(new wxSlider(this, 5800,50,0,100) , wxSizerFlags().Expand() );
-
-    sizerTop->AddStretchSpacer()->SetMinSize(200, 50);
 
     wxSizer * const sizerBtns = new wxBoxSizer(wxHORIZONTAL);
     sizerBtns->Add(new wxButton(this, wxID_ABOUT, wxT("&About")), flags);
@@ -121,14 +120,12 @@ MyDialog::MyDialog(const wxString& title)
     SetSizerAndFit(sizerTop);
     Centre();
 
-    m_taskBarIcon = new MyTaskBarIcon();
+	m_taskBarIcon = new MyTaskBarIcon();
 
     // we should be able to show up to 128 characters on Windows
     if ( !m_taskBarIcon->SetIcon(wxICON(sample),
-                                 "wxTaskBarIcon Sample\n"
-                                 "With a very, very, very, very\n"
-                                 "long tooltip whose length is\n"
-                                 "greater than 64 characters.") )
+		"Desktop Monitor Brightness\n"
+		"This tool allows you to change your desktop monitor brightness like a laptop.") )
     {
         wxLogError(wxT("Could not set icon."));
     }
@@ -140,11 +137,22 @@ MyDialog::MyDialog(const wxString& title)
         wxLogError(wxT("Could not set icon."));
     }
 #endif
+
+	wxTimer auto_brightness_timer = new wxTimer(this, 5801);
+	auto_brightness_timer.SetOwner(this);
+	auto_brightness_timer.Start(1000);
 }
 
 MyDialog::~MyDialog()
 {
     delete m_taskBarIcon;
+}
+
+void MyDialog::OnTimerTimeout(wxTimerEvent& event) {
+	if (AutoBrightness) {
+		wxLogMessage(wxT("Auto setting brightness") );
+		SetBasedOnTimeOfDay(current_settings);
+	}
 }
 
 void MyDialog::OnSlider(wxScrollEvent& event) {
@@ -239,7 +247,7 @@ void MyTaskBarIcon::OnMenuUICheckmark(wxUpdateUIEvent &event)
 wxMenu *MyTaskBarIcon::CreatePopupMenu()
 {
     wxMenu *menu = new wxMenu;
-    menu->Append(PU_RESTORE, wxT("&Set Volume"));
+    menu->Append(PU_RESTORE, wxT("&Set Brightness"));
     menu->AppendSeparator();
     menu->AppendCheckItem(PU_CHECKMARK, wxT("AutoBrightness"));
     menu->AppendSeparator();
