@@ -85,7 +85,7 @@ bool MyApp::OnInit()
 // ----------------------------------------------------------------------------
 
 wxBEGIN_EVENT_TABLE(MyDialog, wxDialog)
-	EVT_COMMAND_SCROLL_CHANGED(5800, MyDialog::OnSlider)
+	EVT_COMMAND_SCROLL(5800, MyDialog::OnSlider)
     EVT_BUTTON(wxID_ABOUT, MyDialog::OnAbout)
     EVT_BUTTON(wxID_OK, MyDialog::OnOK)
     EVT_CLOSE(MyDialog::OnCloseWindow)
