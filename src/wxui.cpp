@@ -47,6 +47,7 @@ wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
+
 	settings current_settings = RestoreSettings("settings.json");
 
 	GetMonitorHandles();
@@ -84,6 +85,7 @@ bool MyApp::OnInit()
 // ----------------------------------------------------------------------------
 
 wxBEGIN_EVENT_TABLE(MyDialog, wxDialog)
+	EVT_SLIDER(5800, MyDialog::OnSlider)
     EVT_BUTTON(wxID_ABOUT, MyDialog::OnAbout)
     EVT_BUTTON(wxID_OK, MyDialog::OnOK)
     EVT_CLOSE(MyDialog::OnCloseWindow)
@@ -102,19 +104,12 @@ MyDialog::MyDialog(const wxString& title)
                       (
                         this,
                         wxID_ANY,
-                        wxT("Press 'Hide me' to hide this window, Exit to quit.")
-                      ), flags);
-
-    sizerTop->Add(new wxStaticText
-                      (
-                        this,
-                        wxID_ANY,
-                        wxT("Double-click on the taskbar icon to show me again.")
+                        wxT("Move this slider to set brightness")
                       ), flags);
 
 	// add slider
 
-	sizerTop->Add(new wxSlider(this,wxID_ANY,0,0,100) , wxSizerFlags().Expand() );
+	sizerTop->Add(new wxSlider(this, 5800,0,0,100) , wxSizerFlags().Expand() );
 
     sizerTop->AddStretchSpacer()->SetMinSize(200, 50);
 
@@ -150,6 +145,13 @@ MyDialog::MyDialog(const wxString& title)
 MyDialog::~MyDialog()
 {
     delete m_taskBarIcon;
+}
+
+void MyDialog::OnSlider(wxCommandEvent& event) {
+	wxEventType eventType = event.GetEventType();
+	//std::cout << "Event Type";
+
+	wxLogMessage(wxT("Slider event occured %d"),eventType);
 }
 
 void MyDialog::OnAbout(wxCommandEvent& WXUNUSED(event))
