@@ -35,13 +35,7 @@ static MyDialog *gs_dialog = NULL;
 // this toggles the running of the SetBasedOnTimeOFDay loop
 static bool AutoBrightness = true;
 
-// ============================================================================
-// implementation
-// ============================================================================
 
-// ----------------------------------------------------------------------------
-// MyApp
-// ----------------------------------------------------------------------------
 
 wxIMPLEMENT_APP(MyApp);
 
@@ -86,7 +80,7 @@ bool MyApp::OnInit()
 // ----------------------------------------------------------------------------
 
 wxBEGIN_EVENT_TABLE(MyDialog, wxDialog)
-	EVT_TIMER(5801, MyDialog::OnTimerTimeout)
+	EVT_TIMER(5801, MyDialog::OnTimer)
 	EVT_COMMAND_SCROLL(5800, MyDialog::OnSlider)
     EVT_BUTTON(wxID_ABOUT, MyDialog::OnAbout)
     EVT_BUTTON(wxID_OK, MyDialog::OnOK)
@@ -138,9 +132,9 @@ MyDialog::MyDialog(const wxString& title)
     }
 #endif
 
-	wxTimer auto_brightness_timer = new wxTimer(this, 5801);
-	auto_brightness_timer.SetOwner(this);
-	auto_brightness_timer.Start(1000);
+	wxTimer* auto_brightness_timer = new wxTimer(this, 5801);
+
+	auto_brightness_timer->Start(1000 * current_settings.polling_time);
 }
 
 MyDialog::~MyDialog()
@@ -148,9 +142,8 @@ MyDialog::~MyDialog()
     delete m_taskBarIcon;
 }
 
-void MyDialog::OnTimerTimeout(wxTimerEvent& event) {
+void MyDialog::OnTimer(wxTimerEvent& event) {
 	if (AutoBrightness) {
-		wxLogMessage(wxT("Auto setting brightness") );
 		SetBasedOnTimeOfDay(current_settings);
 	}
 }

@@ -46,7 +46,7 @@ public:
     virtual ~MyDialog();
 
 protected:
-	void OnTimerTimeout(wxTimerEvent & event);
+	void OnTimer(wxTimerEvent & event);
 	void OnSlider(wxScrollEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnOK(wxCommandEvent& event);
