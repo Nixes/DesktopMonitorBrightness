@@ -57,12 +57,6 @@ bool MyApp::OnInit()
     gs_dialog = new MyDialog(wxT("Monitor Brightness"));
 	// but don't show it
 
-	// setup some kind of wxTimer event and run the below within
-
-
-	//auto_brightness_timer.Start(1000 * current_settings.polling_time);
-	//SetBasedOnTimeOfDay(current_settings);
-
     return true;
 }
 
