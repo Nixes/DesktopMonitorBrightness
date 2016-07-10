@@ -36,7 +36,7 @@ settings current_settings;
 bool MyApp::OnInit()
 {
 
-	settings current_settings = RestoreSettings("settings.json");
+	current_settings = RestoreSettings("settings.json");
 
 	GetMonitorHandles();
 
@@ -122,6 +122,18 @@ MyDialog::MyDialog(const wxString& title)
     }
 #endif
 
+	// this stuff here tries to position the window just above the taskbar
+	wxRect display_area;
+	display_area = wxGetClientDisplayRect();
+	int window_width;
+	int window_height;
+	this->GetClientSize(&window_width,&window_height);
+	int xpos = display_area.GetWidth() - window_width;
+	int ypos = display_area.GetHeight() - window_height;
+	this->SetPosition(wxPoint(xpos, ypos));
+
+
+
 	wxTimer* auto_brightness_timer = new wxTimer(this, 5801);
 	auto_brightness_timer->Start(1000 * current_settings.polling_time);
 }
@@ -141,7 +153,8 @@ void MyDialog::OnTimer(wxTimerEvent& event) {
 }
 
 void MyDialog::OnSlider(wxScrollEvent& event) {
-	wxEventType eventType = event.GetEventType();
+	// we must turn off auto brightness to allow manual control first
+	AutoBrightness = false;
 
 	int slider_value = event.GetPosition();
 
@@ -244,7 +257,9 @@ wxMenu *MyTaskBarIcon::CreatePopupMenu()
     return menu;
 }
 
-void MyTaskBarIcon::OnLeftButtonClick(wxTaskBarIconEvent&)
+void MyTaskBarIcon::OnLeftButtonClick(wxTaskBarIconEvent &event)
 {
+	// should place dialog at bottom right of primary monitor
     gs_dialog->Show(!gs_dialog->IsShown());
+
 }
