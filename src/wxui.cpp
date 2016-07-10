@@ -78,6 +78,8 @@ MyDialog::MyDialog(const wxString& title)
         : wxDialog(NULL, wxID_ANY, title)
 {
     wxSizer * const sizerTop = new wxBoxSizer(wxVERTICAL);
+	sizerTop->SetMinSize(300,-1);
+
 	this->SetWindowStyle(wxSTAY_ON_TOP); // remove window border
 
 	//this->OnKillFocus( wxFocusEvent(wxEVT_KILL_FOCUS, 5802) );
