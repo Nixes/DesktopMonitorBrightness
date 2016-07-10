@@ -89,11 +89,13 @@ MyDialog::MyDialog(const wxString& title)
     wxSizerFlags flags;
     flags.Border(wxALL, 5);
 
+	sizerTop->Add(new wxStaticText(this,wxID_ANY,wxT("Monitor Brightness")), flags);
+
 	// add slider
-	sizerTop->Add(new wxSlider(this, 5800,50,0,100) , wxSizerFlags().Expand() );
+	sizerTop->Add(new wxSlider(this, 5800,50,0,100, wxDefaultPosition,wxDefaultSize, wxSL_VALUE_LABEL) , wxSizerFlags().Expand() );
 
     wxSizer * const sizerBtns = new wxBoxSizer(wxHORIZONTAL);
-    sizerBtns->Add(new wxButton(this, wxID_OK, wxT("&Hide")), flags);
+    sizerBtns->Add(new wxButton(this, wxID_OK, wxT("&Done")), flags);
 
     sizerTop->Add(sizerBtns, flags.Align(wxALIGN_CENTER_HORIZONTAL));
     SetSizerAndFit(sizerTop);
