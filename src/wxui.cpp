@@ -246,5 +246,5 @@ wxMenu *MyTaskBarIcon::CreatePopupMenu()
 
 void MyTaskBarIcon::OnLeftButtonClick(wxTaskBarIconEvent&)
 {
-    gs_dialog->Show(true);
+    gs_dialog->Show(!gs_dialog->IsShown());
 }
