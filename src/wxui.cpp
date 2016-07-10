@@ -75,7 +75,6 @@ wxBEGIN_EVENT_TABLE(MyDialog, wxDialog)
 	//EVT_KILL_FOCUS(5802, MyDialog::OnKillFocus)
 	EVT_TIMER(5801, MyDialog::OnTimer)
 	EVT_COMMAND_SCROLL(5800, MyDialog::OnSlider)
-    EVT_BUTTON(wxID_ABOUT, MyDialog::OnAbout)
     EVT_BUTTON(wxID_OK, MyDialog::OnOK)
     EVT_CLOSE(MyDialog::OnCloseWindow)
 wxEND_EVENT_TABLE()
@@ -85,7 +84,7 @@ MyDialog::MyDialog(const wxString& title)
         : wxDialog(NULL, wxID_ANY, title)
 {
     wxSizer * const sizerTop = new wxBoxSizer(wxVERTICAL);
-	this->SetWindowStyle(wxSYSTEM_MENU); // remove window border
+	this->SetWindowStyle(wxSTAY_ON_TOP); // remove window border
 
 	//this->OnKillFocus( wxFocusEvent(wxEVT_KILL_FOCUS, 5802) );
 	//this->Connect(wxEVT_KILL_FOCUS, wxFocusEventHandler(MyFrame::OnKillFocus), NULL, this);
@@ -98,7 +97,6 @@ MyDialog::MyDialog(const wxString& title)
 	sizerTop->Add(new wxSlider(this, 5800,50,0,100) , wxSizerFlags().Expand() );
 
     wxSizer * const sizerBtns = new wxBoxSizer(wxHORIZONTAL);
-    sizerBtns->Add(new wxButton(this, wxID_ABOUT, wxT("&About")), flags);
     sizerBtns->Add(new wxButton(this, wxID_OK, wxT("&Hide")), flags);
 
     sizerTop->Add(sizerBtns, flags.Align(wxALIGN_CENTER_HORIZONTAL));
@@ -132,8 +130,6 @@ MyDialog::MyDialog(const wxString& title)
 	int ypos = display_area.GetHeight() - window_height;
 	this->SetPosition(wxPoint(xpos, ypos));
 
-
-
 	wxTimer* auto_brightness_timer = new wxTimer(this, 5801);
 	auto_brightness_timer->Start(1000 * current_settings.polling_time);
 }
@@ -162,22 +158,6 @@ void MyDialog::OnSlider(wxScrollEvent& event) {
 	//wxLogMessage(wxT("Slider event: Scroll Changed: %d", event.GetValue() ));
 	//std::cout << "Event Type";
 	//wxLogMessage(wxT("Slider event occured %d"),eventType);
-}
-
-void MyDialog::OnAbout(wxCommandEvent& WXUNUSED(event))
-{
-    static const char * const title = "About wxWidgets Taskbar Sample";
-    static const char * const message
-        = "wxWidgets sample showing wxTaskBarIcon class\n"
-          "\n"
-          "(C) 1997 Julian Smart\n"
-          "(C) 2007 Vadim Zeitlin";
-
-#if defined(__WXMSW__) && wxUSE_TASKBARICON_BALLOONS
-    m_taskBarIcon->ShowBalloon(title, message, 15000, wxICON_INFORMATION);
-#else // !__WXMSW__
-    wxMessageBox(message, title, wxICON_INFORMATION|wxOK, this);
-#endif // __WXMSW__/!__WXMSW__
 }
 
 void MyDialog::OnOK(wxCommandEvent& WXUNUSED(event))
