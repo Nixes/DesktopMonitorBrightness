@@ -19,7 +19,7 @@ public:
 #endif
     {}
 
-    void OnLeftButtonDClick(wxTaskBarIconEvent&);
+    void OnLeftButtonClick(wxTaskBarIconEvent&);
     void OnMenuRestore(wxCommandEvent&);
     void OnMenuExit(wxCommandEvent&);
     void OnMenuSetNewIcon(wxCommandEvent&);
@@ -46,6 +46,7 @@ public:
     virtual ~MyDialog();
 
 protected:
+	void OnKillFocus(wxFocusEvent & event);
 	void OnTimer(wxTimerEvent & event);
 	void OnSlider(wxScrollEvent& event);
     void OnAbout(wxCommandEvent& event);

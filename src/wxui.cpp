@@ -7,14 +7,6 @@
     #include "wx/wx.h"
 //#endif
 
-// the application icon (under Windows it is in resources)
-#ifndef wxHAS_IMAGES_IN_RESOURCES
-    #include "../sample.xpm"
-#endif
-
-// another alternative application icon
-#include "smile.xpm"
-
 #include "wx/taskbar.h"
 #include "wx/slider.h"
 
@@ -80,6 +72,7 @@ bool MyApp::OnInit()
 // ----------------------------------------------------------------------------
 
 wxBEGIN_EVENT_TABLE(MyDialog, wxDialog)
+	//EVT_KILL_FOCUS(5802, MyDialog::OnKillFocus)
 	EVT_TIMER(5801, MyDialog::OnTimer)
 	EVT_COMMAND_SCROLL(5800, MyDialog::OnSlider)
     EVT_BUTTON(wxID_ABOUT, MyDialog::OnAbout)
@@ -92,16 +85,14 @@ MyDialog::MyDialog(const wxString& title)
         : wxDialog(NULL, wxID_ANY, title)
 {
     wxSizer * const sizerTop = new wxBoxSizer(wxVERTICAL);
+	this->SetWindowStyle(wxSYSTEM_MENU); // remove window border
+
+	//this->OnKillFocus( wxFocusEvent(wxEVT_KILL_FOCUS, 5802) );
+	//this->Connect(wxEVT_KILL_FOCUS, wxFocusEventHandler(MyFrame::OnKillFocus), NULL, this);
+	
 
     wxSizerFlags flags;
-    flags.Border(wxALL, 10);
-
-    sizerTop->Add(new wxStaticText
-                      (
-                        this,
-                        wxID_ANY,
-                        wxT("Move this slider to set brightness")
-                      ), flags);
+    flags.Border(wxALL, 5);
 
 	// add slider
 	sizerTop->Add(new wxSlider(this, 5800,50,0,100) , wxSizerFlags().Expand() );
@@ -118,8 +109,7 @@ MyDialog::MyDialog(const wxString& title)
 
     // we should be able to show up to 128 characters on Windows
     if ( !m_taskBarIcon->SetIcon(wxICON(sample),
-		"Desktop Monitor Brightness\n"
-		"This tool allows you to change your desktop monitor brightness like a laptop.") )
+		"Desktop Monitor Brightness") )
     {
         wxLogError(wxT("Could not set icon."));
     }
@@ -133,13 +123,15 @@ MyDialog::MyDialog(const wxString& title)
 #endif
 
 	wxTimer* auto_brightness_timer = new wxTimer(this, 5801);
-
 	auto_brightness_timer->Start(1000 * current_settings.polling_time);
 }
 
 MyDialog::~MyDialog()
 {
     delete m_taskBarIcon;
+}
+
+void MyDialog::OnKillFocus(wxFocusEvent& event) {
 }
 
 void MyDialog::OnTimer(wxTimerEvent& event) {
@@ -198,12 +190,8 @@ void MyDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
 enum
 {
     PU_RESTORE = 10001,
-    PU_NEW_ICON,
     PU_EXIT,
-    PU_CHECKMARK,
-    PU_SUB1,
-    PU_SUB2,
-    PU_SUBMAIN
+    PU_CHECKMARK
 };
 
 
@@ -212,7 +200,7 @@ wxBEGIN_EVENT_TABLE(MyTaskBarIcon, wxTaskBarIcon)
     EVT_MENU(PU_EXIT,    MyTaskBarIcon::OnMenuExit)
     EVT_MENU(PU_CHECKMARK,MyTaskBarIcon::OnMenuCheckmark)
     EVT_UPDATE_UI(PU_CHECKMARK,MyTaskBarIcon::OnMenuUICheckmark)
-    EVT_TASKBAR_LEFT_DCLICK  (MyTaskBarIcon::OnLeftButtonDClick)
+    EVT_TASKBAR_LEFT_DOWN  (MyTaskBarIcon::OnLeftButtonClick)
 wxEND_EVENT_TABLE()
 
 void MyTaskBarIcon::OnMenuRestore(wxCommandEvent& )
@@ -256,7 +244,7 @@ wxMenu *MyTaskBarIcon::CreatePopupMenu()
     return menu;
 }
 
-void MyTaskBarIcon::OnLeftButtonDClick(wxTaskBarIconEvent&)
+void MyTaskBarIcon::OnLeftButtonClick(wxTaskBarIconEvent&)
 {
     gs_dialog->Show(true);
 }

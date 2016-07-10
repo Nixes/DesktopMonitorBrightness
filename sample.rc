@@ -25,7 +25,3 @@ sample ICON "sunwhite.ico"
 // for more information)
 #define wxUSE_NO_MANIFEST 0
 
-// this is not always needed but doesn't hurt (except making the executable
-// very slightly larger): this file contains the standard icons, cursors, ...
-#include "wx/msw/wx.rc"
-
