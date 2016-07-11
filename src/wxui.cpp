@@ -31,14 +31,10 @@ static bool AutoBrightness = true;
 
 wxIMPLEMENT_APP(MyApp);
 
-settings current_settings;
-
 bool MyApp::OnInit()
 {
 
-	current_settings = RestoreSettings("settings.json");
 
-	GetMonitorHandles();
 
     if ( !wxApp::OnInit() )
         return false;
