@@ -24,34 +24,17 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor,
 
 class DesktopMonitorManager {
 private:
+	//
+	// vars
+	//
 	settings current_settings;
-
 	std::vector<HANDLE>  physicalMonitorHandles;
-
 	std::vector<float>  monitorBrightnessScaleFactor;
-
 	float current_brightness;
 
-public:
-	DesktopMonitorManager() {
-		current_settings = RestoreSettings("settings.json");
-
-		GetMonitorHandles();
-	}
-	const int GetBrightness () {
-		return current_brightness;
-	}
-	// pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
-	void PrintMonitorBrightness(HANDLE physmonitor) {
-		DWORD min = 0;
-		DWORD current = 0;
-		DWORD max = 0;
-
-		bool bSuccess = GetMonitorBrightness(physmonitor, &min, &current, &max);
-
-		std::cout << "Monitor Brightness values{ min: " << min << ", current: " << current << ", max: " << max << "}\n";
-	}
-
+	//
+	// member funcs
+	//
 	bool AddMonitorScaleFactor(HANDLE physmonitor) {
 		DWORD min = 0;
 		DWORD current = 0;
@@ -74,6 +57,89 @@ public:
 		}
 	}
 
+	void GetMonitorHandles() {
+		// this function is an odd beast
+		EnumDisplayMonitors(0, 0, MonitorEnumProc, 0);
+		// while this function does not return anything the results are found in physicalMonitorHandles
+
+		for each (HANDLE monitor in physicalMonitorHandles) {
+			if (!AddMonitorScaleFactor(monitor)) {
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
+
+	// pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
+	void PrintMonitorBrightness(HANDLE physmonitor) {
+		DWORD min = 0;
+		DWORD current = 0;
+		DWORD max = 0;
+
+		bool bSuccess = GetMonitorBrightness(physmonitor, &min, &current, &max);
+
+		std::cout << "Monitor Brightness values{ min: " << min << ", current: " << current << ", max: " << max << "}\n";
+	}
+
+	void SetBrightness(HANDLE hMonitor, int brightness, float scalefactor) {
+		int calculatedBrightness = (float)brightness * scalefactor;
+		DWORD dwNewBrightness = (DWORD)calculatedBrightness;
+		SetMonitorBrightness(hMonitor, dwNewBrightness);
+	}
+
+	float GetFloatHoursNow() {
+		// current time
+		std::time_t now = std::time(NULL);
+		struct tm tm_now;
+		float currTimeHours = 0;
+		try {
+			localtime_s(&tm_now, &now);
+			currTimeHours = (float)tm_now.tm_hour + ((float)tm_now.tm_min / 60.0);
+		}
+		catch (int e) {
+			std::cout << "An exception occurred. Exception: " << e << "\n";
+		}
+		return currTimeHours;
+	}
+
+
+	// start file manip functions
+	std::string LoadTextFile(std::string inFileName) {
+		std::ifstream inFile;
+		inFile.open(inFileName);
+
+		std::stringstream strStream;
+		strStream << inFile.rdbuf(); // read file into stringstream
+		std::string str = strStream.str();// then convert stringstream into a real string
+		inFile.close();
+
+		return str;
+	}
+
+	void SaveTextFile(std::string outFileName, std::string outputstring) {
+		std::ofstream outFile;
+		outFile.open(outFileName);
+
+		outFile << outputstring;
+		outFile.close();
+	}
+
+	bool FileExists(std::string fileLocation) {
+		std::ifstream inFile(fileLocation);
+		return inFile.good();
+	}
+	// end file manip functions
+
+public:
+	DesktopMonitorManager() {
+		RestoreSettings("settings.json");
+
+		GetMonitorHandles();
+	}
+	const int GetBrightness () {
+		return current_brightness;
+	}
+
+	// this must be public due to the callback shenanigans
 	// this gets called each time EnumDisplayMonitors has another monitor to process
 	BOOL MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor) {
 		// these variables are intermediaries for GetNumberOfPhysicalMonitorsFromHMONITOR
@@ -114,24 +180,6 @@ public:
 		return true;
 	}
 
-	void GetMonitorHandles() {
-		// this function is an odd beast
-		EnumDisplayMonitors(0, 0, MonitorEnumProc, 0);
-		// while this function does not return anything the results are found in physicalMonitorHandles
-
-		for each (HANDLE monitor in physicalMonitorHandles) {
-			if (!AddMonitorScaleFactor(monitor)) {
-				exit(EXIT_FAILURE);
-			}
-		}
-	}
-
-
-	void SetBrightness(HANDLE hMonitor, int brightness, float scalefactor) {
-		int calculatedBrightness = (float)brightness * scalefactor;
-		DWORD dwNewBrightness = (DWORD)calculatedBrightness;
-		SetMonitorBrightness(hMonitor, dwNewBrightness);
-	}
 
 	void SetAllMonitorsBrightness(int brightness) {
 		// will set the brightness of all detected monitors
@@ -146,35 +194,21 @@ public:
 
 	// this is a function that attempts to fade between the current brightness setting and the target brightness setting.
 	// no delay required given it takes 50ms per screen to set its brightness, thus TAKES LONGER THE MORE SCREENS CONNECTED
-	void SetBrightnessFade(int targetBrightness, int initialBrightness) {
+	void SetBrightnessFade(int targetBrightness) {
 		// only update if the current brightness is not the same as the desired brightmess
-		if (targetBrightness != initialBrightness) {
-			for (int currentBrightness = initialBrightness; currentBrightness != targetBrightness;) {
-				if (currentBrightness < targetBrightness) {
-					currentBrightness++;
+		if (targetBrightness != current_brightness) {
+			while (current_brightness != targetBrightness) {
+				if (current_brightness < targetBrightness) {
+					current_brightness++;
 				}
-				else if (currentBrightness > targetBrightness) {
-					currentBrightness--;
+				else if (current_brightness > targetBrightness) {
+					current_brightness--;
 				}
-				SetAllMonitorsBrightness(currentBrightness);
+				SetAllMonitorsBrightness(current_brightness);
 			}
 		}
 	}
 
-	float GetFloatHoursNow() {
-		// current time
-		std::time_t now = std::time(NULL);
-		struct tm tm_now;
-		float currTimeHours = 0;
-		try {
-			localtime_s(&tm_now, &now);
-			currTimeHours = (float)tm_now.tm_hour + ((float)tm_now.tm_min / 60.0);
-		}
-		catch (int e) {
-			std::cout << "An exception occurred. Exception: " << e << "\n";
-		}
-		return currTimeHours;
-	}
 
 	float GetSunTimeRatio(settings current_settings) {
 		// time range between sunerise and sunset
@@ -202,44 +236,18 @@ public:
 		int sineresult = round(sin(GetSunTimeRatio(current_settings)  * PI) * 100);
 		std::cout << "Sine func result: " << sineresult << "\n";
 
-		SetBrightnessFade(sineresult, current_brightness);
+		SetBrightnessFade(sineresult);
 	}
 
-	std::string LoadTextFile(std::string inFileName) {
-		std::ifstream inFile;
-		inFile.open(inFileName);
-
-		std::stringstream strStream;
-		strStream << inFile.rdbuf(); // read file into stringstream
-		std::string str = strStream.str();// then convert stringstream into a real string
-		inFile.close();
-
-		return str;
-	}
-
-	void SaveTextFile(std::string outFileName, std::string outputstring) {
-		std::ofstream outFile;
-		outFile.open(outFileName);
-
-		outFile << outputstring;
-		outFile.close();
-	}
-
-	bool FileExists(std::string fileLocation) {
-		std::ifstream inFile(fileLocation);
-		return inFile.good();
-	}
-
-	// unused until a gui is implemented
 	// convert from settings struct to json file
-	void SaveSettings(settings current) {
+	void SaveSettings() {
 		json j;
 
-		j["sunrise"] = current.sunrise;
-		j["sunset"] = current.sunset;
-		j["polling_time"] = current.polling_time;
-		j["max_global_brightness"] = current.max_global_brightness;
-		j["min_global_brightness"] = current.min_global_brightness;
+		j["sunrise"] = current_settings.sunrise;
+		j["sunset"] = current_settings.sunset;
+		j["polling_time"] = current_settings.polling_time;
+		j["max_global_brightness"] = current_settings.max_global_brightness;
+		j["min_global_brightness"] = current_settings.min_global_brightness;
 
 		std::string settingsraw = j.dump();
 
@@ -248,9 +256,9 @@ public:
 	}
 
 	// convert from json file to settings struct
-	settings RestoreSettings(std::string settings_location) {
+	void RestoreSettings(std::string settings_location) {
 		// provide some defaults
-		settings new_settings{ 7.00 ,14.00 ,60 ,0,100 };
+		current_settings = { 7.00 ,14.00 ,60 ,0,100 };
 
 
 		if (FileExists(settings_location)) {
@@ -259,19 +267,17 @@ public:
 
 			json j3 = json::parse(configfileraw);
 
-			new_settings.sunrise = j3["sunrise"];
-			new_settings.sunset = j3["sunset"];
-			new_settings.polling_time = j3["polling_time"];
-			new_settings.max_global_brightness = j3["max_global_brightness"];
-			new_settings.min_global_brightness = j3["min_global_brightness"];
+			current_settings.sunrise = j3["sunrise"];
+			current_settings.sunset = j3["sunset"];
+			current_settings.polling_time = j3["polling_time"];
+			current_settings.max_global_brightness = j3["max_global_brightness"];
+			current_settings.min_global_brightness = j3["min_global_brightness"];
 		}
 		else {
 			std::cout << "Failed to load config, making a new one based on defualts";
-			SaveSettings(new_settings);
+			SaveSettings();
 		}
 
-
-		return new_settings;
 	}
 
 };
