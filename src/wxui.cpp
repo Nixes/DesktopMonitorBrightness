@@ -27,14 +27,14 @@ static MyDialog *gs_dialog = NULL;
 // this toggles the running of the SetBasedOnTimeOFDay loop
 static bool AutoBrightness = true;
 
-
+DesktopMonitorManager mMan;
 
 wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
 
-
+	mMan = DesktopMonitorManager();
 
     if ( !wxApp::OnInit() )
         return false;
@@ -122,7 +122,7 @@ MyDialog::MyDialog(const wxString& title)
 
 	// this sets the timer as used for automatically setting brightness based on time
 	wxTimer* auto_brightness_timer = new wxTimer(this, 5801);
-	auto_brightness_timer->Start(1000 * current_settings.polling_time);
+	auto_brightness_timer->Start(1000 * mMan.GetPollingTime() );
 }
 
 MyDialog::~MyDialog()
