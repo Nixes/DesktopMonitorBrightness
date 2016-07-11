@@ -33,7 +33,6 @@ wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
-
 	mMan = DesktopMonitorManager();
 
     if ( !wxApp::OnInit() )

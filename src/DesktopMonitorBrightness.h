@@ -41,26 +41,17 @@ private:
 	bool FileExists(std::string fileLocation);
 	// end file manip functions
 
-
+	float GetSunTimeRatio();
 public:
 	const int GetBrightness();
 	const int GetPollingTime();
 	DesktopMonitorManager();
 
-
-
 	BOOL MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor);
 	void SetAllMonitorsBrightness(int brightness);
 	void SetBrightnessFade(int targetBrightness);
-
-
-	float GetSunTimeRatio();
-
 	void SetBasedOnTimeOfDay();
 
-	// convert from settings struct to json file
 	void SaveSettings();
-
-	// convert from json file to settings struct
 	void RestoreSettings(std::string settings_location);
 };

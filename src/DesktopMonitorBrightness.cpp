@@ -27,7 +27,7 @@ DesktopMonitorManager::DesktopMonitorManager() {
 	GetMonitorHandles();
 }
 
-inline void DesktopMonitorManager::GetMonitorHandles() {
+void DesktopMonitorManager::GetMonitorHandles() {
 	// this function is an odd beast
 	EnumDisplayMonitors(0, 0, MonitorEnumProc, 0);
 	// while this function does not return anything the results are found in physicalMonitorHandles
@@ -41,7 +41,7 @@ inline void DesktopMonitorManager::GetMonitorHandles() {
 
 // pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
 
-inline void DesktopMonitorManager::PrintMonitorBrightness(HANDLE physmonitor) {
+ void DesktopMonitorManager::PrintMonitorBrightness(HANDLE physmonitor) {
 	DWORD min = 0;
 	DWORD current = 0;
 	DWORD max = 0;
@@ -51,13 +51,13 @@ inline void DesktopMonitorManager::PrintMonitorBrightness(HANDLE physmonitor) {
 	std::cout << "Monitor Brightness values{ min: " << min << ", current: " << current << ", max: " << max << "}\n";
 }
 
-inline void DesktopMonitorManager::SetBrightness(HANDLE hMonitor, int brightness, float scalefactor) {
+ void DesktopMonitorManager::SetBrightness(HANDLE hMonitor, int brightness, float scalefactor) {
 	int calculatedBrightness = (float)brightness * scalefactor;
 	DWORD dwNewBrightness = (DWORD)calculatedBrightness;
 	SetMonitorBrightness(hMonitor, dwNewBrightness);
 }
 
-inline float DesktopMonitorManager::GetFloatHoursNow() {
+ float DesktopMonitorManager::GetFloatHoursNow() {
 	// current time
 	std::time_t now = std::time(NULL);
 	struct tm tm_now;
@@ -76,7 +76,7 @@ inline float DesktopMonitorManager::GetFloatHoursNow() {
 // member funcs
 //
 
-inline bool DesktopMonitorManager::AddMonitorScaleFactor(HANDLE physmonitor) {
+ bool DesktopMonitorManager::AddMonitorScaleFactor(HANDLE physmonitor) {
 	DWORD min = 0;
 	DWORD current = 0;
 	DWORD max = 0;
@@ -100,7 +100,7 @@ inline bool DesktopMonitorManager::AddMonitorScaleFactor(HANDLE physmonitor) {
 
 // start file manip functions
 
-inline std::string DesktopMonitorManager::LoadTextFile(std::string inFileName) {
+ std::string DesktopMonitorManager::LoadTextFile(std::string inFileName) {
 	std::ifstream inFile;
 	inFile.open(inFileName);
 
@@ -112,7 +112,7 @@ inline std::string DesktopMonitorManager::LoadTextFile(std::string inFileName) {
 	return str;
 }
 
-inline void DesktopMonitorManager::SaveTextFile(std::string outFileName, std::string outputstring) {
+ void DesktopMonitorManager::SaveTextFile(std::string outFileName, std::string outputstring) {
 	std::ofstream outFile;
 	outFile.open(outFileName);
 
@@ -120,20 +120,20 @@ inline void DesktopMonitorManager::SaveTextFile(std::string outFileName, std::st
 	outFile.close();
 }
 
-inline bool DesktopMonitorManager::FileExists(std::string fileLocation) {
+ bool DesktopMonitorManager::FileExists(std::string fileLocation) {
 	std::ifstream inFile(fileLocation);
 	return inFile.good();
 }
 
 
-inline const int DesktopMonitorManager::GetPollingTime() {
+ const int DesktopMonitorManager::GetPollingTime() {
 	return current_settings.polling_time;
 }
 
 
 // this must be public due to the callback shenanigans
 // this gets called each time EnumDisplayMonitors has another monitor to process
-inline BOOL DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor) {
+ BOOL DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor) {
 	// these variables are intermediaries for GetNumberOfPhysicalMonitorsFromHMONITOR
 	DWORD numberPhysicalMonitors;
 	LPPHYSICAL_MONITOR pPhysicalMonitors = NULL;
@@ -164,7 +164,8 @@ inline BOOL DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lp
 			printf("Physical monitor: '%s' (handle = 0x%X)\n", pPhysicalMonitors[0].szPhysicalMonitorDescription, pPhysicalMonitors[0].hPhysicalMonitor);
 
 			// adds the monitor handle to the vector
-			physicalMonitorHandles.push_back(pPhysicalMonitors[0].hPhysicalMonitor);
+			//physicalMonitorHandles.push_back(pPhysicalMonitors[0].hPhysicalMonitor);
+			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< this is causing exceptions!!!
 		}
 	}
 
@@ -172,7 +173,7 @@ inline BOOL DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lp
 	return true;
 }
 
-inline void DesktopMonitorManager::SetAllMonitorsBrightness(int brightness) {
+ void DesktopMonitorManager::SetAllMonitorsBrightness(int brightness) {
 	// will set the brightness of all detected monitors
 	std::cout << "Setting all monitor brightness to: " << brightness << "\n";
 	// iterate the vector of monitor handles, and for each monitor set the brightness
@@ -186,7 +187,7 @@ inline void DesktopMonitorManager::SetAllMonitorsBrightness(int brightness) {
 // this is a function that attempts to fade between the current brightness setting and the target brightness setting.
 // no delay required given it takes 50ms per screen to set its brightness, thus TAKES LONGER THE MORE SCREENS CONNECTED
 
-inline void DesktopMonitorManager::SetBrightnessFade(int targetBrightness) {
+ void DesktopMonitorManager::SetBrightnessFade(int targetBrightness) {
 	// only update if the current brightness is not the same as the desired brightmess
 	if (targetBrightness != current_brightness) {
 		while (current_brightness != targetBrightness) {
@@ -201,7 +202,7 @@ inline void DesktopMonitorManager::SetBrightnessFade(int targetBrightness) {
 	}
 }
 
-inline float DesktopMonitorManager::GetSunTimeRatio() {
+ float DesktopMonitorManager::GetSunTimeRatio() {
 	// time range between sunerise and sunset
 	float lightrange = current_settings.sunset - current_settings.sunrise;
 
@@ -223,7 +224,7 @@ inline float DesktopMonitorManager::GetSunTimeRatio() {
 	return ratio;
 }
 
-inline void DesktopMonitorManager::SetBasedOnTimeOfDay() {
+ void DesktopMonitorManager::SetBasedOnTimeOfDay() {
 	int sineresult = round(sin(GetSunTimeRatio()  * PI) * 100);
 	std::cout << "Sine func result: " << sineresult << "\n";
 
@@ -231,7 +232,7 @@ inline void DesktopMonitorManager::SetBasedOnTimeOfDay() {
 }
 
 // convert from settings struct to json file
-inline void DesktopMonitorManager::SaveSettings() {
+ void DesktopMonitorManager::SaveSettings() {
 	json j;
 
 	j["sunrise"] = current_settings.sunrise;
@@ -247,7 +248,7 @@ inline void DesktopMonitorManager::SaveSettings() {
 }
 
 // convert from json file to settings struct
-inline void DesktopMonitorManager::RestoreSettings(std::string settings_location) {
+ void DesktopMonitorManager::RestoreSettings(std::string settings_location) {
 	// provide some defaults
 	current_settings = { 7.00 ,14.00 ,60 ,0,100 };
 
@@ -271,6 +272,6 @@ inline void DesktopMonitorManager::RestoreSettings(std::string settings_location
 
 }
 
-inline const int DesktopMonitorManager::GetBrightness() {
+ const int DesktopMonitorManager::GetBrightness() {
 	return current_brightness;
 }
