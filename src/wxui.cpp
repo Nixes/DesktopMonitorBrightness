@@ -66,7 +66,8 @@ bool MyApp::OnInit()
 // ----------------------------------------------------------------------------
 
 wxBEGIN_EVENT_TABLE(MyDialog, wxDialog)
-	//EVT_KILL_FOCUS(5802, MyDialog::OnKillFocus)
+	//EVT_COMMAND_KILL_FOCUS(5802 ,MyDialog::OnKillFocus)
+	//EVT_ACTIVATE(MyDialog::OnKillFocus)
 	EVT_TIMER(5801, MyDialog::OnTimer)
 	EVT_COMMAND_SCROLL(5800, MyDialog::OnSlider)
     EVT_BUTTON(wxID_OK, MyDialog::OnOK)
@@ -78,13 +79,9 @@ MyDialog::MyDialog(const wxString& title)
         : wxDialog(NULL, wxID_ANY, title)
 {
     wxSizer * const sizerTop = new wxBoxSizer(wxVERTICAL);
-	sizerTop->SetMinSize(300,-1);
+	sizerTop->SetMinSize(300,-1); // make the dialog a fixed width
 
-	this->SetWindowStyle(wxSTAY_ON_TOP); // remove window border
-
-	//this->OnKillFocus( wxFocusEvent(wxEVT_KILL_FOCUS, 5802) );
-	//this->Connect(wxEVT_KILL_FOCUS, wxFocusEventHandler(MyFrame::OnKillFocus), NULL, this);
-	
+	this->SetWindowStyle(wxSYSTEM_MENU); // remove window border
 
     wxSizerFlags flags;
     flags.Border(wxALL, 5);
@@ -92,7 +89,8 @@ MyDialog::MyDialog(const wxString& title)
 	sizerTop->Add(new wxStaticText(this,wxID_ANY,wxT("Monitor Brightness")), flags);
 
 	// add slider
-	sizerTop->Add(new wxSlider(this, 5800,50,0,100, wxDefaultPosition,wxDefaultSize, wxSL_VALUE_LABEL) , wxSizerFlags().Expand() );
+	sizerTop->Add(new wxSlider(this, 5800, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL), wxSizerFlags().Expand() );
+
 
     wxSizer * const sizerBtns = new wxBoxSizer(wxHORIZONTAL);
     sizerBtns->Add(new wxButton(this, wxID_OK, wxT("&Done")), flags);
@@ -128,6 +126,13 @@ MyDialog::MyDialog(const wxString& title)
 	int ypos = display_area.GetHeight() - window_height;
 	this->SetPosition(wxPoint(xpos, ypos));
 
+	// this should hide the brightness setting dialog when it looses focus
+	//this->OnKillFocus( wxFocusEvent(wxEVT_KILL_FOCUS, 5802) );
+	//this->Connect(wxEVT_KILL_FOCUS, wxFocusEventHandler(MyFrame::OnKillFocus), NULL, this);
+	//this->Connect(wxEVT_CHILD_FOCUS, wxFocusEventHandler(MyDialog::OnKillFocus));
+	Bind(wxEVT_KILL_FOCUS, &MyDialog::OnKillFocus,this);
+
+	// this sets the timer as used for automatically setting brightness based on time
 	wxTimer* auto_brightness_timer = new wxTimer(this, 5801);
 	auto_brightness_timer->Start(1000 * current_settings.polling_time);
 }
@@ -137,7 +142,9 @@ MyDialog::~MyDialog()
     delete m_taskBarIcon;
 }
 
-void MyDialog::OnKillFocus(wxFocusEvent& event) {
+void MyDialog::OnKillFocus(wxFocusEvent& WXUNUSED(event)) {
+	wxMessageBox(wxT("Killfocus called"));
+	//Show(false);
 }
 
 void MyDialog::OnTimer(wxTimerEvent& event) {
@@ -153,9 +160,6 @@ void MyDialog::OnSlider(wxScrollEvent& event) {
 	int slider_value = event.GetPosition();
 
 	SetAllMonitorsBrightness(slider_value);
-	//wxLogMessage(wxT("Slider event: Scroll Changed: %d", event.GetValue() ));
-	//std::cout << "Event Type";
-	//wxLogMessage(wxT("Slider event occured %d"),eventType);
 }
 
 void MyDialog::OnOK(wxCommandEvent& WXUNUSED(event))

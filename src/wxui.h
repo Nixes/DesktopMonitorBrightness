@@ -46,8 +46,8 @@ public:
     virtual ~MyDialog();
 
 protected:
-	void OnKillFocus(wxFocusEvent & event);
-	void OnTimer(wxTimerEvent & event);
+	void OnKillFocus(wxFocusEvent & WXUNUSED);
+	void OnTimer(wxTimerEvent& event);
 	void OnSlider(wxScrollEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnOK(wxCommandEvent& event);
