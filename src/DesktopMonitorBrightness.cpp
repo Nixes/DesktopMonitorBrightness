@@ -21,6 +21,12 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor,
 	return true;
 }
 
+DesktopMonitorManager::DesktopMonitorManager() {
+	RestoreSettings("settings.json");
+
+	GetMonitorHandles();
+}
+
 inline void DesktopMonitorManager::GetMonitorHandles() {
 	// this function is an odd beast
 	EnumDisplayMonitors(0, 0, MonitorEnumProc, 0);
@@ -119,11 +125,6 @@ inline bool DesktopMonitorManager::FileExists(std::string fileLocation) {
 	return inFile.good();
 }
 
-inline DesktopMonitorManager::DesktopMonitorManager() {
-	RestoreSettings("settings.json");
-
-	GetMonitorHandles();
-}
 
 inline const int DesktopMonitorManager::GetPollingTime() {
 	return current_settings.polling_time;
@@ -200,7 +201,7 @@ inline void DesktopMonitorManager::SetBrightnessFade(int targetBrightness) {
 	}
 }
 
-inline float DesktopMonitorManager::GetSunTimeRatio(settings current_settings) {
+inline float DesktopMonitorManager::GetSunTimeRatio() {
 	// time range between sunerise and sunset
 	float lightrange = current_settings.sunset - current_settings.sunrise;
 
@@ -222,8 +223,8 @@ inline float DesktopMonitorManager::GetSunTimeRatio(settings current_settings) {
 	return ratio;
 }
 
-inline void DesktopMonitorManager::SetBasedOnTimeOfDay(settings current_settings) {
-	int sineresult = round(sin(GetSunTimeRatio(current_settings)  * PI) * 100);
+inline void DesktopMonitorManager::SetBasedOnTimeOfDay() {
+	int sineresult = round(sin(GetSunTimeRatio()  * PI) * 100);
 	std::cout << "Sine func result: " << sineresult << "\n";
 
 	SetBrightnessFade(sineresult);

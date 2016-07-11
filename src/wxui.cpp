@@ -132,7 +132,7 @@ MyDialog::~MyDialog()
 
 void MyDialog::OnTimer(wxTimerEvent& event) {
 	if (AutoBrightness) {
-		SetBasedOnTimeOfDay(current_settings);
+		mMan.SetBasedOnTimeOfDay();
 	}
 }
 
@@ -142,7 +142,7 @@ void MyDialog::OnSlider(wxScrollEvent& event) {
 
 	int slider_value = event.GetPosition();
 
-	SetAllMonitorsBrightness(slider_value);
+	mMan.SetAllMonitorsBrightness(slider_value);
 }
 
 void MyDialog::OnOK(wxCommandEvent& WXUNUSED(event))

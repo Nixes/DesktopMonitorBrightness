@@ -43,8 +43,8 @@ private:
 
 
 public:
-	const int GetBrightness() {}
-	const int GetPollingTime() {}
+	const int GetBrightness();
+	const int GetPollingTime();
 	DesktopMonitorManager();
 
 
@@ -54,9 +54,9 @@ public:
 	void SetBrightnessFade(int targetBrightness);
 
 
-	float GetSunTimeRatio(settings current_settings);
+	float GetSunTimeRatio();
 
-	void SetBasedOnTimeOfDay(settings current_settings);
+	void SetBasedOnTimeOfDay();
 
 	// convert from settings struct to json file
 	void SaveSettings();
