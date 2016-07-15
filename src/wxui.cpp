@@ -82,7 +82,7 @@ MyDialog::MyDialog(const wxString& title)
 	sizerTop->Add(new wxStaticText(this,wxID_ANY,wxT("Monitor Brightness")), flags);
 
 	// add slider
-	sizerTop->Add(new wxSlider(this, 5800, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL), wxSizerFlags().Expand() );
+	sizerTop->Add(new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL), wxSizerFlags().Expand() );
 
 
     wxSizer * const sizerBtns = new wxBoxSizer(wxHORIZONTAL);

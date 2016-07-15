@@ -19,7 +19,7 @@ private:
 	//
 	settings current_settings;
 	std::vector<float>  monitorBrightnessScaleFactor;
-	float current_brightness;
+	int current_brightness;
 
 	//
 	// member funcs

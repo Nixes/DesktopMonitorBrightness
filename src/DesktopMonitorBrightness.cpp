@@ -93,6 +93,7 @@ void DesktopMonitorManager::GetMonitorHandles() {
 		currentScaledBrightness = (float)current / brightnessScaleFactor;
 		std::cout << "Monitor Brightness values {min: " << min << ", current: " << current << ", max: " << max << ", scalefactor: " << brightnessScaleFactor << ", currentscaled: " << currentScaledBrightness << "}\n";
 
+
 		monitorBrightnessScaleFactor.push_back(brightnessScaleFactor);
 		return true;
 	}
