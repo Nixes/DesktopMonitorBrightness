@@ -10,18 +10,8 @@
 // some class design reminders:
 // - all getters should be marked as const
 
-
-
-// this is a little trick I learned from: http://stackoverflow.com/questions/23509011/c-enumdisplaymonitors-callback-inside-a-class
-// but I couldn't get it to function properly, so I have to resort to a shitty global variable solution anyway
-/* BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor,
-	HDC hdcMonitor,
-	LPRECT lprcMonitor,
-	LPARAM dwData) {
-
-	reinterpret_cast<DesktopMonitorManager*>(dwData)->MonitorEnum(hMonitor, hdcMonitor, lprcMonitor);
-	return true;
-} */
+// I really dislike having this here rather than it being private inside the desktopmonitormanager class
+// but I can't figure a way to work around handler class methods
 std::vector<HANDLE>  physicalMonitorHandles;
 
 
