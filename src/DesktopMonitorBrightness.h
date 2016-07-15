@@ -18,7 +18,6 @@ private:
 	// vars
 	//
 	settings current_settings;
-	std::vector<HANDLE>  physicalMonitorHandles;
 	std::vector<float>  monitorBrightnessScaleFactor;
 	float current_brightness;
 
@@ -47,7 +46,8 @@ public:
 	const int GetPollingTime();
 	DesktopMonitorManager();
 
-	BOOL MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor);
+	//BOOL MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor);
+	static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM dwData);
 	void SetAllMonitorsBrightness(int brightness);
 	void SetBrightnessFade(int targetBrightness);
 	void SetBasedOnTimeOfDay();

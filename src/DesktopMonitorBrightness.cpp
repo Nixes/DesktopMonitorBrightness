@@ -10,16 +10,20 @@
 // some class design reminders:
 // - all getters should be marked as const
 
+
+
 // this is a little trick I learned from: http://stackoverflow.com/questions/23509011/c-enumdisplaymonitors-callback-inside-a-class
-// allows us to get past the c++ member callback issues
-BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor,
+// but I couldn't get it to function properly, so I have to resort to a shitty global variable solution anyway
+/* BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor,
 	HDC hdcMonitor,
 	LPRECT lprcMonitor,
 	LPARAM dwData) {
 
 	reinterpret_cast<DesktopMonitorManager*>(dwData)->MonitorEnum(hMonitor, hdcMonitor, lprcMonitor);
 	return true;
-}
+} */
+std::vector<HANDLE>  physicalMonitorHandles;
+
 
 DesktopMonitorManager::DesktopMonitorManager() {
 	RestoreSettings("settings.json");
@@ -29,7 +33,7 @@ DesktopMonitorManager::DesktopMonitorManager() {
 
 void DesktopMonitorManager::GetMonitorHandles() {
 	// this function is an odd beast
-	EnumDisplayMonitors(0, 0, MonitorEnumProc, 0);
+	::EnumDisplayMonitors(NULL, NULL, MonitorEnum, 0);
 	// while this function does not return anything the results are found in physicalMonitorHandles
 
 	for each (HANDLE monitor in physicalMonitorHandles) {
@@ -133,7 +137,7 @@ void DesktopMonitorManager::GetMonitorHandles() {
 
 // this must be public due to the callback shenanigans
 // this gets called each time EnumDisplayMonitors has another monitor to process
- BOOL DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor) {
+BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM dwData) {
 	// these variables are intermediaries for GetNumberOfPhysicalMonitorsFromHMONITOR
 	DWORD numberPhysicalMonitors;
 	LPPHYSICAL_MONITOR pPhysicalMonitors = NULL;
@@ -164,7 +168,7 @@ void DesktopMonitorManager::GetMonitorHandles() {
 			printf("Physical monitor: '%s' (handle = 0x%X)\n", pPhysicalMonitors[0].szPhysicalMonitorDescription, pPhysicalMonitors[0].hPhysicalMonitor);
 
 			// adds the monitor handle to the vector
-			//physicalMonitorHandles.push_back(pPhysicalMonitors[0].hPhysicalMonitor);
+			physicalMonitorHandles.push_back(pPhysicalMonitors[0].hPhysicalMonitor);
 			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< this is causing exceptions!!!
 		}
 	}
