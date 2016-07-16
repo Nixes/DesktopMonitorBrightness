@@ -97,7 +97,7 @@ MyDialog::MyDialog(const wxString& title)
 
     // we should be able to show up to 128 characters on Windows
     if ( !m_taskBarIcon->SetIcon(wxICON(sample),
-		"Desktop Monitor Brightness\nCurrent Brightness: "+ std::to_string(mMan.GetBrightness()) ) )
+		"Desktop Monitor Brightness\n Current Brightness: "+ std::to_string(mMan.GetBrightness()) ) )
     {
         wxLogError(wxT("Could not set icon."));
     }
