@@ -44,6 +44,7 @@ class MyDialog: public wxDialog
 public:
     MyDialog(const wxString& title);
     virtual ~MyDialog();
+	wxSlider *m_slider;
 
 protected:
 	void OnTimer(wxTimerEvent& event);

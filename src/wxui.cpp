@@ -82,7 +82,8 @@ MyDialog::MyDialog(const wxString& title)
 	sizerTop->Add(new wxStaticText(this,wxID_ANY,wxT("Monitor Brightness")), flags);
 
 	// add slider
-	sizerTop->Add(new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL), wxSizerFlags().Expand() );
+	m_slider = new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
+	sizerTop->Add(m_slider, wxSizerFlags().Expand());
 
 
     wxSizer * const sizerBtns = new wxBoxSizer(wxHORIZONTAL);
@@ -182,6 +183,7 @@ wxEND_EVENT_TABLE()
 
 void MyTaskBarIcon::OnMenuRestore(wxCommandEvent& )
 {
+	gs_dialog->m_slider->SetValue(mMan.GetBrightness());
     gs_dialog->Show(true);
 }
 
@@ -224,6 +226,7 @@ wxMenu *MyTaskBarIcon::CreatePopupMenu()
 void MyTaskBarIcon::OnLeftButtonClick(wxTaskBarIconEvent &event)
 {
 	// should place dialog at bottom right of primary monitor
+	gs_dialog->m_slider->SetValue(mMan.GetBrightness());
     gs_dialog->Show(!gs_dialog->IsShown());
 
 }
