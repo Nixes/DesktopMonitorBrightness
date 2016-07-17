@@ -63,7 +63,6 @@ bool MyApp::OnInit()
 wxBEGIN_EVENT_TABLE(MyDialog, wxDialog)
 	EVT_TIMER(5801, MyDialog::OnTimer)
 	EVT_COMMAND_SCROLL(5800, MyDialog::OnSlider)
-    EVT_BUTTON(wxID_OK, MyDialog::OnOK)
     EVT_CLOSE(MyDialog::OnCloseWindow)
 wxEND_EVENT_TABLE()
 
@@ -85,11 +84,6 @@ MyDialog::MyDialog(const wxString& title)
 	m_slider = new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
 	sizerTop->Add(m_slider, wxSizerFlags().Expand());
 
-
-    wxSizer * const sizerBtns = new wxBoxSizer(wxHORIZONTAL);
-    sizerBtns->Add(new wxButton(this, wxID_OK, wxT("&Done")), flags);
-
-    sizerTop->Add(sizerBtns, flags.Align(wxALIGN_CENTER_HORIZONTAL));
     SetSizerAndFit(sizerTop);
     Centre();
 
@@ -143,11 +137,6 @@ void MyDialog::OnSlider(wxScrollEvent& event) {
 	int slider_value = event.GetPosition();
 
 	mMan.SetAllMonitorsBrightness(slider_value);
-}
-
-void MyDialog::OnOK(wxCommandEvent& WXUNUSED(event))
-{
-    Show(false);
 }
 
 void MyDialog::OnExit(wxCommandEvent& WXUNUSED(event))
