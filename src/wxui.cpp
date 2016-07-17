@@ -174,6 +174,7 @@ void MyTaskBarIcon::OnMenuRestore(wxCommandEvent& )
 {
 	gs_dialog->m_slider->SetValue(mMan.GetBrightness());
     gs_dialog->Show(true);
+	gs_dialog->Raise();
 }
 
 void MyTaskBarIcon::OnMenuExit(wxCommandEvent& )
@@ -217,5 +218,6 @@ void MyTaskBarIcon::OnLeftButtonClick(wxTaskBarIconEvent &event)
 	// should place dialog at bottom right of primary monitor
 	gs_dialog->m_slider->SetValue(mMan.GetBrightness());
     gs_dialog->Show(!gs_dialog->IsShown());
+	gs_dialog->Raise();
 
 }
