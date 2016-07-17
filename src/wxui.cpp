@@ -109,7 +109,7 @@ MyDialog::MyDialog(const wxString& title)
 	display_area = wxGetClientDisplayRect();
 	int window_width;
 	int window_height;
-	this->GetClientSize(&window_width,&window_height);
+	this->GetSize(&window_width,&window_height);
 	int xpos = display_area.GetWidth() - window_width;
 	int ypos = display_area.GetHeight() - window_height;
 	this->SetPosition(wxPoint(xpos, ypos));
