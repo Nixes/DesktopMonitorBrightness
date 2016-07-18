@@ -273,24 +273,26 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
  bool DesktopMonitorManager::Tests(std::string &error) {
 	 bool return_value = true;
+	 std::ostringstream buff;
 
+	 float value = 0;
 	 // check basic ratios
-	 if (round(sin(0.5 * PI) * 100) != 1) {
+	 if (value = round(sin(0.5 * PI) * 100) != 1) {
 		 // failed
 		 return_value = false;
-		 error += "";
+		 buff << "Failed to confirm basic sine function: " << value << "\n";
 	 }
-	 if (round(sin(0 * PI) * 100) != 0) {
+	 if (value = round(sin(0 * PI) * 100) != 0) {
 		 // failed
 		 return_value = false;
 	 }
-	 if (round(sin(1 * PI) * 100) != 0) {
+	 if (value = round(sin(1 * PI) * 100) != 0) {
 		 // failed
 		 return_value = false;
 	 }
 
 	 current_settings = { (float)0.2,(float)0.2,60,0,100 };
 
-
+	 error = buff.str();
 	 return return_value;
  }

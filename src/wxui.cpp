@@ -48,8 +48,9 @@ bool MyApp::OnInit()
         );
     }
 
-	if ( mMan.Tests() == false ) {
-		wxLogError(wxT("Tests Failed"));
+	std::string error_string = "";
+	if ( mMan.Tests(error_string) == false ) {
+		wxLogError( wxT("Tests Failed with: "+error_string) );
 	}
     // Create the Brightness change window
     //gs_dialog = new MyDialog(wxT("Monitor Brightness"));
