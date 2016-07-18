@@ -48,8 +48,11 @@ bool MyApp::OnInit()
         );
     }
 
+	if ( mMan.Tests() == false ) {
+		wxLogError(wxT("Tests Failed"));
+	}
     // Create the Brightness change window
-    gs_dialog = new MyDialog(wxT("Monitor Brightness"));
+    //gs_dialog = new MyDialog(wxT("Monitor Brightness"));
 	// but don't show it
 
     return true;

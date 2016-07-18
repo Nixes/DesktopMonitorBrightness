@@ -40,9 +40,10 @@ private:
 	bool FileExists(std::string fileLocation);
 	// end file manip functions
 
-	float GetSunTimeRatio();
+	float GetSunTimeRatio(float currenttime);
 public:
 	const int GetBrightness();
+	bool Tests(std::string & error);
 	const int GetPollingTime();
 	DesktopMonitorManager();
 

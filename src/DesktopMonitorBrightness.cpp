@@ -198,11 +198,10 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	}
 }
 
- float DesktopMonitorManager::GetSunTimeRatio() {
+ float DesktopMonitorManager::GetSunTimeRatio(float currenttime) {
 	// time range between sunerise and sunset
 	float lightrange = current_settings.sunset - current_settings.sunrise;
 
-	float currenttime = GetFloatHoursNow();
 	// value betweem 1 and zero defining amounnt of day progressed
 	float ratio = (currenttime - current_settings.sunrise) / lightrange;
 	// clamp the get float hours to min and max
@@ -221,7 +220,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 }
 
  void DesktopMonitorManager::SetBasedOnTimeOfDay() {
-	int sineresult = round(sin(GetSunTimeRatio()  * PI) * 100);
+	int sineresult = round(sin(GetSunTimeRatio( GetFloatHoursNow() )  * PI) * 100);
 	std::cout << "Sine func result: " << sineresult << "\n";
 
 	SetBrightnessFade(sineresult);
@@ -271,3 +270,27 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
  const int DesktopMonitorManager::GetBrightness() {
 	return current_brightness;
 }
+
+ bool DesktopMonitorManager::Tests(std::string &error) {
+	 bool return_value = true;
+
+	 // check basic ratios
+	 if (round(sin(0.5 * PI) * 100) != 1) {
+		 // failed
+		 return_value = false;
+		 error += "";
+	 }
+	 if (round(sin(0 * PI) * 100) != 0) {
+		 // failed
+		 return_value = false;
+	 }
+	 if (round(sin(1 * PI) * 100) != 0) {
+		 // failed
+		 return_value = false;
+	 }
+
+	 current_settings = { (float)0.2,(float)0.2,60,0,100 };
+
+
+	 return return_value;
+ }
