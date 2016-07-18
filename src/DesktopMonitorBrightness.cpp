@@ -277,21 +277,36 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
 	 float value = 0;
 	 // check basic ratios
-	 if (value = round(sin(0.5 * PI) * 100) != 1) {
+	 if (value = round(sin(0.5 * PI) * 100) != 100) {
 		 // failed
 		 return_value = false;
-		 buff << "Failed to confirm basic sine function: " << value << "\n";
+		 buff << "Failed to confirm basic sine function test1: " << value << "\n";
 	 }
 	 if (value = round(sin(0 * PI) * 100) != 0) {
 		 // failed
 		 return_value = false;
+		 buff << "Failed to confirm basic sine function test2: " << value << "\n";
 	 }
 	 if (value = round(sin(1 * PI) * 100) != 0) {
 		 // failed
 		 return_value = false;
+		 buff << "Failed to confirm basic sine function test3: " << value << "\n";
 	 }
 
-	 current_settings = { (float)0.2,(float)0.2,60,0,100 };
+	 // check get sun time ratio function
+	 current_settings = { (float)1,(float)2,60,0,100 };
+	 if (value = GetSunTimeRatio(1.5) != 0.5) {
+		 return_value = false;
+		 buff << "Failed to validate GetSunTimeRatio test1: "<< value << "\n";
+	 }
+	 if (value = GetSunTimeRatio(2) != 1) {
+		 return_value = false;
+		 buff << "Failed to validate GetSunTimeRatio test2: " << value << "\n";
+	 }
+	 if (value = GetSunTimeRatio(1) != 0) {
+		 return_value = false;
+		 buff << "Failed to validate GetSunTimeRatio test3: " << value << "\n";
+	 }
 
 	 error = buff.str();
 	 return return_value;
