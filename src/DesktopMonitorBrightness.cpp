@@ -275,6 +275,12 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	 bool return_value = true;
 	 std::ostringstream buff;
 
+	 // test set time based on time of day
+	 float sineresult = round( sin( GetSunTimeRatio(GetFloatHoursNow())  * PI) * 100 );
+	 return_value = false;
+	 buff << "SetTestTimeOfDay: " << sineresult << ", suntimeratio: " << GetSunTimeRatio(GetFloatHoursNow()) << ", floathours: " << GetFloatHoursNow() << "\n";
+
+
 	 float value = 0;
 	 // check basic ratios
 	 if (value = round(sin(0.5 * PI) * 100) != 100) {
@@ -307,6 +313,21 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 		 return_value = false;
 		 buff << "Failed to validate GetSunTimeRatio test3: " << value << "\n";
 	 }
+
+	 // test clamping
+	 if (value = GetSunTimeRatio(0.5) != 0) {
+		 return_value = false;
+		 buff << "Failed to validate GetSunTimeRatio test4: " << value << "\n";
+	 }
+	 if (value = GetSunTimeRatio(2.5) != 1) {
+		 return_value = false;
+		 buff << "Failed to validate GetSunTimeRatio test5: " << value << "\n";
+	 }
+	 if (value = GetSunTimeRatio(23.5) != 1) {
+		 return_value = false;
+		 buff << "Failed to validate GetSunTimeRatio test6: " << value << "\n";
+	 }
+
 
 	 error = buff.str();
 	 return return_value;
