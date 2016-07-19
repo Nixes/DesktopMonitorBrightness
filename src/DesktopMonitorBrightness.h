@@ -51,7 +51,7 @@ public:
 	static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM dwData);
 	void SetAllMonitorsBrightness(int brightness);
 	void SetBrightnessFade(int targetBrightness);
-	void SetBasedOnTimeOfDay();
+	float SetBasedOnTimeOfDay();
 
 	void SaveSettings();
 	void RestoreSettings(std::string settings_location);

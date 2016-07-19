@@ -18,6 +18,8 @@
 // include brightness setting functions
 #include "DesktopMonitorBrightness.h"
 
+//#define testing
+
 // ----------------------------------------------------------------------------
 // global variables
 // ----------------------------------------------------------------------------
@@ -48,11 +50,16 @@ bool MyApp::OnInit()
         );
     }
 
-	#ifndef testing
-	std::string error_string = "";
-	if ( mMan.Tests(error_string) == false ) {
-		wxLogError( wxT("Tests Failed with: "+error_string) );
-	}
+	#ifdef testing
+		std::string error_string = "";
+		if ( mMan.Tests(error_string) == false ) {
+			wxLogError( wxT("Tests FAILED with: "+error_string) );
+			exit(EXIT_FAILURE);
+		}
+		else {
+			wxLogError(wxT("Tests PASSED with: " + error_string));
+			exit(EXIT_SUCCESS);
+		}
 	#endif
 
     // Create the Brightness change window
@@ -133,7 +140,10 @@ MyDialog::~MyDialog()
 
 void MyDialog::OnTimer(wxTimerEvent& event) {
 	if (AutoBrightness) {
-		mMan.SetBasedOnTimeOfDay();
+		std::ostringstream stream;
+		stream << mMan.SetBasedOnTimeOfDay();
+		std::string debug_string = stream.str();
+		//wxLogError(wxT( "Target brightness was: " + debug_string ));
 	}
 }
 

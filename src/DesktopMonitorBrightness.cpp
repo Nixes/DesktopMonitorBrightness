@@ -33,8 +33,7 @@ void DesktopMonitorManager::GetMonitorHandles() {
 	}
 }
 
-// pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
-
+// pysmonitor must be a physical monitor as obtained from GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
  void DesktopMonitorManager::PrintMonitorBrightness(HANDLE physmonitor) {
 	DWORD min = 0;
 	DWORD current = 0;
@@ -42,7 +41,7 @@ void DesktopMonitorManager::GetMonitorHandles() {
 
 	bool bSuccess = GetMonitorBrightness(physmonitor, &min, &current, &max);
 
-	std::cout << "Monitor Brightness values{ min: " << min << ", current: " << current << ", max: " << max << "}\n";
+	//std::cout << "Monitor Brightness values{ min: " << min << ", current: " << current << ", max: " << max << "}\n";
 }
 
  void DesktopMonitorManager::SetBrightness(HANDLE hMonitor, int brightness, float scalefactor) {
@@ -58,17 +57,13 @@ void DesktopMonitorManager::GetMonitorHandles() {
 	float currTimeHours = 0;
 	try {
 		localtime_s(&tm_now, &now);
-		currTimeHours = (float)tm_now.tm_hour + ((float)tm_now.tm_min / 60.0);
+		currTimeHours = (float)tm_now.tm_hour + ( (float)tm_now.tm_min / 60.0 );
 	}
 	catch (int e) {
-		std::cout << "An exception occurred. Exception: " << e << "\n";
+		//std::cout << "An exception occurred. Exception: " << e << "\n";
 	}
 	return currTimeHours;
 }
-
-//
-// member funcs
-//
 
  bool DesktopMonitorManager::AddMonitorScaleFactor(HANDLE physmonitor) {
 	DWORD min = 0;
@@ -81,7 +76,7 @@ void DesktopMonitorManager::GetMonitorHandles() {
 	if (bSuccess) {
 		brightnessScaleFactor = (float)max / 100;
 		currentScaledBrightness = (float)current / brightnessScaleFactor;
-		std::cout << "Monitor Brightness values {min: " << min << ", current: " << current << ", max: " << max << ", scalefactor: " << brightnessScaleFactor << ", currentscaled: " << currentScaledBrightness << "}\n";
+		//std::cout << "Monitor Brightness values {min: " << min << ", current: " << current << ", max: " << max << ", scalefactor: " << brightnessScaleFactor << ", currentscaled: " << currentScaledBrightness << "}\n";
 
 		current_brightness = (int)round(currentScaledBrightness);
 
@@ -89,13 +84,14 @@ void DesktopMonitorManager::GetMonitorHandles() {
 		return true;
 	}
 	else {
-		std::cout << "Failed to obtain monitor brightness settings!\n This can be caused by querying the current brightness of a given display too soon after it was last read or changed. Or by monitors that don't support this property.\n";
+		//std::cout << "Failed to obtain monitor brightness settings!\n This can be caused by querying the current brightness of a given display too soon after it was last read or changed. Or by monitors that don't support this property.\n";
 		return false;
 	}
 }
 
+//
 // start file manip functions
-
+//
  std::string DesktopMonitorManager::LoadTextFile(std::string inFileName) {
 	std::ifstream inFile;
 	inFile.open(inFileName);
@@ -143,14 +139,14 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 		pPhysicalMonitors = (LPPHYSICAL_MONITOR)malloc(numberPhysicalMonitors * sizeof(PHYSICAL_MONITOR));
 
 		if (pPhysicalMonitors != NULL) {
-			printf("Found %d physical monitors in this HMONITOR\n", numberPhysicalMonitors);
+			//printf("Found %d physical monitors in this HMONITOR\n", numberPhysicalMonitors);
 		}
 		else {
-			std::cout << "no physical monitors found or could not be counted\n";
+			//std::cout << "no physical monitors found or could not be counted\n";
 		}
 	}
 	else {
-		std::cout << "failed to get any monitors ";
+		//std::cout << "failed to get any monitors ";
 		printf("error: %d \n", GetLastError());
 	}
 
@@ -171,7 +167,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
  void DesktopMonitorManager::SetAllMonitorsBrightness(int brightness) {
 	// will set the brightness of all detected monitors
-	std::cout << "Setting all monitor brightness to: " << brightness << "\n";
+	//std::cout << "Setting all monitor brightness to: " << brightness << "\n";
 	// iterate the vector of monitor handles, and for each monitor set the brightness
 	for (unsigned int i = 0; i < physicalMonitorHandles.size(); i++) {
 		// according to ms docs, this takes 50ms to return
@@ -211,19 +207,20 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	else if (ratio > 1) {
 		ratio = 1;
 	}
-	std::cout << "DEBUG: Set Time Of Day {sunrisetime: " << current_settings.sunrise
+	/*std::cout << "DEBUG: Set Time Of Day {sunrisetime: " << current_settings.sunrise
 		<< ", sunsettime: " << current_settings.sunset
 		<< ", lightrange: " << lightrange
 		<< ", currenttime: " << currenttime
-		<< ", ratio: " << ratio << "}\n";
+		<< ", ratio: " << ratio << "}\n";*/
 	return ratio;
 }
 
- void DesktopMonitorManager::SetBasedOnTimeOfDay() {
-	int sineresult = round(sin(GetSunTimeRatio( GetFloatHoursNow() )  * PI) * 100);
-	std::cout << "Sine func result: " << sineresult << "\n";
+ float DesktopMonitorManager::SetBasedOnTimeOfDay() {
+	int sineresult = round( sin( GetSunTimeRatio( GetFloatHoursNow() )  * PI) * 100);
+	//std::cout << "Sine func result: " << sineresult << "\n";
 
 	SetBrightnessFade(sineresult);
+	return sineresult;
 }
 
 // convert from settings struct to json file
@@ -250,7 +247,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
 	if (FileExists(settings_location)) {
 		std::string configfileraw = LoadTextFile(settings_location);
-		std::cout << configfileraw;
+		//std::cout << configfileraw;
 
 		json j3 = json::parse(configfileraw);
 
@@ -261,7 +258,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 		current_settings.min_global_brightness = j3["min_global_brightness"];
 	}
 	else {
-		std::cout << "Failed to load config, making a new one based on defualts";
+		//std::cout << "Failed to load config, making a new one based on defualts";
 		SaveSettings();
 	}
 
@@ -278,7 +275,6 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	 // test set time based on time of day
 	 int sineresult = round( sin( GetSunTimeRatio(GetFloatHoursNow())  * PI) * 100 );
 	 buff << "SetTestTimeOfDay: " << sineresult << ", suntimeratio: " << GetSunTimeRatio(GetFloatHoursNow()) << ", floathours: " << GetFloatHoursNow() << "\n";
-	 //return_value = false;
 
 	 float value = 0;
 	 // check basic ratios
