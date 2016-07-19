@@ -245,7 +245,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 // convert from json file to settings struct
  void DesktopMonitorManager::RestoreSettings(std::string settings_location) {
 	// provide some defaults
-	current_settings = { 7.00 ,14.00 ,60 ,0,100 };
+	current_settings = { 7.00 ,18.00 ,60 ,0,100 };
 
 
 	if (FileExists(settings_location)) {
@@ -276,10 +276,9 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	 std::ostringstream buff;
 
 	 // test set time based on time of day
-	 float sineresult = round( sin( GetSunTimeRatio(GetFloatHoursNow())  * PI) * 100 );
-	 return_value = false;
+	 int sineresult = round( sin( GetSunTimeRatio(GetFloatHoursNow())  * PI) * 100 );
 	 buff << "SetTestTimeOfDay: " << sineresult << ", suntimeratio: " << GetSunTimeRatio(GetFloatHoursNow()) << ", floathours: " << GetFloatHoursNow() << "\n";
-
+	 //return_value = false;
 
 	 float value = 0;
 	 // check basic ratios
