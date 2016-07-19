@@ -37,7 +37,7 @@ DesktopMonitorManager mMan;
 
 void UpdateTimer() {
 	if (AutoBrightness) {
-		auto_brightness_timer->Start();
+		auto_brightness_timer->Start(1000 * mMan.GetPollingTime());
 	}
 	else {
 		auto_brightness_timer->Stop();
@@ -144,7 +144,7 @@ MyDialog::MyDialog(const wxString& title)
 
 	// this sets the timer as used for automatically setting brightness based on time
 	auto_brightness_timer = new wxTimer(this, 5801);
-	auto_brightness_timer->Start(1000 * mMan.GetPollingTime() );
+	UpdateTimer();
 }
 
 MyDialog::~MyDialog()
