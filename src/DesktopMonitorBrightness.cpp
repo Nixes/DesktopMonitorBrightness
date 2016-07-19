@@ -216,7 +216,8 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 }
 
  float DesktopMonitorManager::SetBasedOnTimeOfDay() {
-	int sineresult = round( sin( GetSunTimeRatio( GetFloatHoursNow() )  * PI) * 100);
+	//int sineresult = round( sin( GetSunTimeRatio( GetFloatHoursNow() )  * PI) * 100);
+	int sineresult = round(sin(GetSunTimeRatio(GetFloatHoursNow())  * PI) * (current_settings.max_global_brightness - current_settings.min_global_brightness) ) + current_settings.min_global_brightness;
 	//std::cout << "Sine func result: " << sineresult << "\n";
 
 	SetBrightnessFade(sineresult);
@@ -242,7 +243,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 // convert from json file to settings struct
  void DesktopMonitorManager::RestoreSettings(std::string settings_location) {
 	// provide some defaults
-	current_settings = { 7.00 ,18.00 ,60 ,0,100 };
+	current_settings = { 7.00 ,18.00 ,60 ,100,0 };
 
 
 	if (FileExists(settings_location)) {
