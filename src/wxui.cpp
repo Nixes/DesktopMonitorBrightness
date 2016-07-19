@@ -29,7 +29,21 @@ static MyDialog *gs_dialog = NULL;
 // this toggles the running of the SetBasedOnTimeOFDay loop
 static bool AutoBrightness = true;
 
+// this contains the timer for running, SetBasedOnTimeOfDay
+wxTimer* auto_brightness_timer;
+
 DesktopMonitorManager mMan;
+
+
+void UpdateTimer() {
+	if (AutoBrightness) {
+		auto_brightness_timer->Start();
+	}
+	else {
+		auto_brightness_timer->Stop();
+	}
+}
+
 
 wxIMPLEMENT_APP(MyApp);
 
@@ -129,7 +143,7 @@ MyDialog::MyDialog(const wxString& title)
 	this->SetPosition(wxPoint(xpos, ypos));
 
 	// this sets the timer as used for automatically setting brightness based on time
-	wxTimer* auto_brightness_timer = new wxTimer(this, 5801);
+	auto_brightness_timer = new wxTimer(this, 5801);
 	auto_brightness_timer->Start(1000 * mMan.GetPollingTime() );
 }
 
@@ -139,17 +153,16 @@ MyDialog::~MyDialog()
 }
 
 void MyDialog::OnTimer(wxTimerEvent& event) {
-	if (AutoBrightness) {
-		std::ostringstream stream;
-		stream << mMan.SetBasedOnTimeOfDay();
-		std::string debug_string = stream.str();
-		//wxLogError(wxT( "Target brightness was: " + debug_string ));
-	}
+	std::ostringstream stream;
+	stream << mMan.SetBasedOnTimeOfDay();
+	std::string debug_string = stream.str();
+	//wxLogError(wxT( "Target brightness was: " + debug_string ));
 }
 
 void MyDialog::OnSlider(wxScrollEvent& event) {
 	// we must turn off auto brightness to allow manual control first
 	AutoBrightness = false;
+	UpdateTimer();
 
 	int slider_value = event.GetPosition();
 
@@ -202,11 +215,13 @@ void MyTaskBarIcon::OnMenuExit(wxCommandEvent& )
 void MyTaskBarIcon::OnMenuCheckmark(wxCommandEvent& )
 {
 	AutoBrightness = !AutoBrightness;
+	UpdateTimer();
 }
 
 void MyTaskBarIcon::OnMenuUICheckmark(wxUpdateUIEvent &event)
 {
     event.Check(AutoBrightness);
+	UpdateTimer();
 }
 
 
