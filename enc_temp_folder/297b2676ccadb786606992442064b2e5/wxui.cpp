@@ -119,7 +119,7 @@ SettingsDialog::SettingsDialog(const wxString& title)
 
 	wxSizer * const sizerBtns = new wxBoxSizer(wxHORIZONTAL);
 	sizerBtns->Add(new wxButton(this, wxID_SAVE, wxT("Save")), flags);
-	sizerBtns->Add(new wxButton(this, wxID_CANCEL, wxT("Discard")), flags);
+	sizerBtns->Add(new wxButton(this, wxID_OK, wxT("Discard")), flags);
 	sizerTop->Add(sizerBtns, flags.Align(wxALIGN_CENTER_HORIZONTAL));
 
 	// actually initiate the sizer
