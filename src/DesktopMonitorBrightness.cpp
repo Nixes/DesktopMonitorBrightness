@@ -243,7 +243,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 // convert from json file to settings struct
  void DesktopMonitorManager::RestoreSettings(std::string settings_location) {
 	// provide some defaults
-	current_settings = { 7.00 ,18.00 ,60 ,100,0 };
+	current_settings = { 7.00 ,18.00 ,60 ,100 ,0 };
 
 
 	if (FileExists(settings_location)) {

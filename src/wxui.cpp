@@ -25,6 +25,7 @@
 // ----------------------------------------------------------------------------
 
 static MyDialog *gs_dialog = NULL;
+static SettingsDialog *settings_dialog = NULL;
 
 // this toggles the running of the SetBasedOnTimeOFDay loop
 static bool AutoBrightness = true;
@@ -83,6 +84,53 @@ bool MyApp::OnInit()
     return true;
 }
 
+// settingsDialog Implementation
+
+wxBEGIN_EVENT_TABLE(SettingsDialog, wxDialog)
+	EVT_CLOSE(SettingsDialog::OnCloseWindow)
+wxEND_EVENT_TABLE()
+
+// constructor
+SettingsDialog::SettingsDialog(const wxString& title)
+	: wxDialog(NULL, wxID_ANY, title) 
+{
+	wxSizer * const sizerTop = new wxBoxSizer(wxVERTICAL);
+	wxSizerFlags flags;
+	flags.Border(wxALL, 10);
+
+	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")), flags);
+	sizerTop->Add(new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER), flags);
+
+
+	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunrise time")), flags);
+	sizerTop->Add(new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER), flags);
+	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunset time")), flags);
+	sizerTop->Add(new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER), flags);
+
+	// these two should ideally be the same control that allows you to set both the minimum and the maximum on the same slider
+	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Minimum Brightness")), flags);
+	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Maximum Brightness")), flags);
+
+	sizerTop->Add(new wxCheckBox(this, wxID_ANY, wxT("AutoBrightness on by default")), flags);
+
+	// actually initiated the sizer
+	SetSizerAndFit(sizerTop);
+	Centre();
+}
+
+SettingsDialog::~SettingsDialog() {
+
+}
+
+void SettingsDialog::OnExit(wxCommandEvent& WXUNUSED(event))
+{
+	Close(true);
+}
+
+void SettingsDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
+{
+	Destroy();
+}
 
 // ----------------------------------------------------------------------------
 // MyDialog implementation
@@ -187,6 +235,7 @@ void MyDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event))
 enum
 {
     PU_RESTORE = 10001,
+	PU_SETTINGS = 10002,
     PU_EXIT,
     PU_CHECKMARK
 };
@@ -196,6 +245,7 @@ wxBEGIN_EVENT_TABLE(MyTaskBarIcon, wxTaskBarIcon)
     EVT_MENU(PU_RESTORE, MyTaskBarIcon::OnMenuRestore)
     EVT_MENU(PU_EXIT,    MyTaskBarIcon::OnMenuExit)
     EVT_MENU(PU_CHECKMARK,MyTaskBarIcon::OnMenuCheckmark)
+	EVT_MENU(PU_SETTINGS, MyTaskBarIcon::OnSettingsRestore)
     EVT_UPDATE_UI(PU_CHECKMARK,MyTaskBarIcon::OnMenuUICheckmark)
     EVT_TASKBAR_LEFT_DOWN  (MyTaskBarIcon::OnLeftButtonClick)
 wxEND_EVENT_TABLE()
@@ -230,6 +280,7 @@ wxMenu *MyTaskBarIcon::CreatePopupMenu()
 {
     wxMenu *menu = new wxMenu;
     menu->Append(PU_RESTORE, wxT("&Set Brightness"));
+	menu->Append(PU_SETTINGS, wxT("&Change Settings"));
     menu->AppendSeparator();
     menu->AppendCheckItem(PU_CHECKMARK, wxT("AutoBrightness"));
     menu->AppendSeparator();
@@ -252,4 +303,12 @@ void MyTaskBarIcon::OnLeftButtonClick(wxTaskBarIconEvent &event)
     gs_dialog->Show(!gs_dialog->IsShown());
 	gs_dialog->Raise();
 
+}
+
+void MyTaskBarIcon::OnSettingsRestore(wxCommandEvent&)
+{
+	// Create the settings window
+	settings_dialog = new SettingsDialog(wxT("Settings"));
+	settings_dialog->Show(true);
+	//wxLogError(wxT("Show Settings"));
 }

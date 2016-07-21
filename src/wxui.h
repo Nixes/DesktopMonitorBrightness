@@ -26,6 +26,7 @@ public:
     void OnMenuCheckmark(wxCommandEvent&);
     void OnMenuUICheckmark(wxUpdateUIEvent&);
     void OnMenuSub(wxCommandEvent&);
+	void OnSettingsRestore(wxCommandEvent&);
     virtual wxMenu *CreatePopupMenu() wxOVERRIDE;
 
     wxDECLARE_EVENT_TABLE();
@@ -38,6 +39,27 @@ class MyApp : public wxApp
 public:
     virtual bool OnInit() wxOVERRIDE;
 };
+
+
+// provides an easy to use interface to modify settings
+class SettingsDialog : public wxDialog
+{
+public:
+	SettingsDialog(const wxString& title);
+	virtual ~SettingsDialog();
+
+protected:
+	void OnExit(wxCommandEvent& event);
+	void OnCloseWindow(wxCloseEvent& event);
+
+	MyTaskBarIcon   *m_taskBarIcon;
+#if defined(__WXOSX__) && wxOSX_USE_COCOA
+	MyTaskBarIcon   *m_dockIcon;
+#endif
+
+	wxDECLARE_EVENT_TABLE();
+};
+
 
 class MyDialog: public wxDialog
 {
