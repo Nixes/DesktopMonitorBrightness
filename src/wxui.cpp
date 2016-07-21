@@ -111,7 +111,8 @@ SettingsDialog::SettingsDialog(const wxString& title)
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Minimum Brightness")), flags);
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Maximum Brightness")), flags);
 	wxSlider* slider = new wxSlider(this, 5800, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_SELRANGE);
-	slider->SetRange(20,80);
+	slider->ClearSel();
+	slider->SetSelection(20,80);
 	sizerTop->Add(slider, wxSizerFlags().Expand());
 
 	sizerTop->Add(new wxCheckBox(this, wxID_ANY, wxT("AutoBrightness on by default")), flags);
