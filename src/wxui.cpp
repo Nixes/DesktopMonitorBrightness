@@ -109,11 +109,13 @@ SettingsDialog::SettingsDialog(const wxString& title)
 
 	// these two should ideally be the same control that allows you to set both the minimum and the maximum on the same slider
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Minimum Brightness")), flags);
+	wxSlider* minslider = new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
+	sizerTop->Add(minslider, wxSizerFlags().Expand());
+
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Maximum Brightness")), flags);
-	wxSlider* slider = new wxSlider(this, 5800, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_SELRANGE);
-	slider->ClearSel();
-	slider->SetSelection(20,80);
-	sizerTop->Add(slider, wxSizerFlags().Expand());
+
+	wxSlider* maxslider = new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
+	sizerTop->Add(maxslider, wxSizerFlags().Expand());
 
 	sizerTop->Add(new wxCheckBox(this, wxID_ANY, wxT("AutoBrightness on by default")), flags);
 
