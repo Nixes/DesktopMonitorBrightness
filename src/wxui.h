@@ -49,6 +49,9 @@ public:
 	virtual ~SettingsDialog();
 
 protected:
+	wxTextCtrl* update_interval;
+	wxTextCtrl* sunrise_time;
+	wxTextCtrl* sunset_time;
 	wxSlider* min_slider;
 	wxSlider* max_slider;
 	wxCheckBox* autobrightness_checkbox;

@@ -100,13 +100,18 @@ SettingsDialog::SettingsDialog(const wxString& title)
 	flags.Border(wxALL, 10);
 
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")), flags);
-	sizerTop->Add(new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER), flags);
+	update_interval = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	sizerTop->Add(update_interval, flags);
 
 
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunrise time")), flags);
-	sizerTop->Add(new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER), flags);
+	sunrise_time = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	sizerTop->Add(sunrise_time, flags);
+
+
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunset time")), flags);
-	sizerTop->Add(new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER), flags);
+	sunset_time = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	sizerTop->Add(sunset_time, flags);
 
 	// these two should ideally be the same control that allows you to set both the minimum and the maximum on the same slider
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Minimum Brightness")), flags);
