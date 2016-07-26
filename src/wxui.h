@@ -51,6 +51,7 @@ public:
 protected:
 	void OnExit(wxCommandEvent& event);
 	void OnCloseWindow(wxCloseEvent& event);
+	void onSave(wxCommandEvent & WXUNUSED);
 
 	MyTaskBarIcon   *m_taskBarIcon;
 #if defined(__WXOSX__) && wxOSX_USE_COCOA

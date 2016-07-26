@@ -88,6 +88,7 @@ bool MyApp::OnInit()
 
 wxBEGIN_EVENT_TABLE(SettingsDialog, wxDialog)
 	EVT_CLOSE(SettingsDialog::OnCloseWindow)
+	EVT_BUTTON(wxID_SAVE,SettingsDialog::onSave)
 wxEND_EVENT_TABLE()
 
 // constructor
@@ -130,6 +131,10 @@ SettingsDialog::SettingsDialog(const wxString& title)
 }
 
 SettingsDialog::~SettingsDialog() {
+
+}
+
+void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
 
 }
 
