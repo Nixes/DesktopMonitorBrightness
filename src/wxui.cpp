@@ -110,15 +110,16 @@ SettingsDialog::SettingsDialog(const wxString& title)
 
 	// these two should ideally be the same control that allows you to set both the minimum and the maximum on the same slider
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Minimum Brightness")), flags);
-	wxSlider* minslider = new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
-	sizerTop->Add(minslider, wxSizerFlags().Expand());
+	min_slider = new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
+	sizerTop->Add(min_slider, wxSizerFlags().Expand());
 
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Maximum Brightness")), flags);
 
-	wxSlider* maxslider = new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
-	sizerTop->Add(maxslider, wxSizerFlags().Expand());
+	max_slider = new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
+	sizerTop->Add(max_slider, wxSizerFlags().Expand());
 
-	sizerTop->Add(new wxCheckBox(this, wxID_ANY, wxT("AutoBrightness on by default")), flags);
+	autobrightness_checkbox = new wxCheckBox(this, wxID_ANY, wxT("AutoBrightness on by default"));
+	sizerTop->Add(autobrightness_checkbox, flags);
 
 	wxSizer * const sizerBtns = new wxBoxSizer(wxHORIZONTAL);
 	sizerBtns->Add(new wxButton(this, wxID_SAVE, wxT("Save")), flags);
@@ -135,7 +136,7 @@ SettingsDialog::~SettingsDialog() {
 }
 
 void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
-
+	wxLogError(wxT("Saving Settings"));
 }
 
 
@@ -327,5 +328,4 @@ void MyTaskBarIcon::OnSettingsRestore(wxCommandEvent&)
 	// Create the settings window
 	settings_dialog = new SettingsDialog(wxT("Settings"));
 	settings_dialog->Show(true);
-	//wxLogError(wxT("Show Settings"));
 }
