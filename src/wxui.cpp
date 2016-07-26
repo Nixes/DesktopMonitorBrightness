@@ -93,7 +93,7 @@ wxEND_EVENT_TABLE()
 
 // constructor
 SettingsDialog::SettingsDialog(const wxString& title)
-	: wxDialog(NULL, wxID_ANY, title) 
+	: wxDialog(NULL, wxID_ANY, title)
 {
 	wxSizer * const sizerTop = new wxBoxSizer(wxVERTICAL);
 	wxSizerFlags flags;
@@ -142,6 +142,8 @@ SettingsDialog::~SettingsDialog() {
 
 void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
 	wxLogError(wxT("Saving Settings"));
+
+	// we now need to read these setting into the settings object
 }
 
 
@@ -309,7 +311,7 @@ wxMenu *MyTaskBarIcon::CreatePopupMenu()
     menu->AppendSeparator();
 
     /* OSX has built-in quit menu for the dock menu, but not for the status item */
-#ifdef __WXOSX__ 
+#ifdef __WXOSX__
     if ( OSXIsStatusItem() )
 #endif
     {

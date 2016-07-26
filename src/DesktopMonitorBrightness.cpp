@@ -269,6 +269,33 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	return current_brightness;
 }
 
+
+ // bunch of generic setters for updating internal settings
+ void DesktopMonitorManager::SetSunrisetime(float sunrisetime)
+ {
+	 current_settings.sunrise = sunrisetime;
+ }
+
+ void DesktopMonitorManager::SetSunsettime(float sunsettime)
+ {
+	 current_settings.sunset = sunsettime;
+ }
+
+ void DesktopMonitorManager::SetPollingTime(int polling_time)
+ {
+	 current_settings.polling_time = polling_time;
+ }
+
+ void DesktopMonitorManager::SetMaxBrightness(int max_brightness)
+ {
+	 current_settings.max_global_brightness = max_brightness;
+ }
+
+ void DesktopMonitorManager::SetMinBrightness(int min_brightness)
+ {
+ }
+
+
  bool DesktopMonitorManager::Tests(std::string &error) {
 	 bool return_value = true;
 	 std::ostringstream buff;

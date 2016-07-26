@@ -47,7 +47,6 @@ public:
 	const int GetPollingTime();
 	DesktopMonitorManager();
 
-	//BOOL MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor);
 	static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM dwData);
 	void SetAllMonitorsBrightness(int brightness);
 	void SetBrightnessFade(int targetBrightness);
@@ -55,4 +54,11 @@ public:
 
 	void SaveSettings();
 	void RestoreSettings(std::string settings_location);
+
+	// bunch of generic getters and setters
+	void SetSunrisetime(float sunrisetime);
+	void SetSunsettime(float sunsettime);
+	void SetPollingTime(int polling_time);
+	void SetMaxBrightness(int max_brightness);
+	void SetMinBrightness(int min_brightness);
 };
