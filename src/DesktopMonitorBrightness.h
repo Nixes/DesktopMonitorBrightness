@@ -24,6 +24,7 @@ private:
 	//
 	// member funcs
 	//
+	void ResetMonitorHandles();
 	void GetMonitorHandles();
 	// pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
 	void PrintMonitorBrightness(HANDLE physmonitor);

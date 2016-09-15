@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <stdlib.h>  // used for sleep function
 #include "DesktopMonitorBrightness.h"
 
 
@@ -21,6 +22,10 @@ DesktopMonitorManager::DesktopMonitorManager() {
 	GetMonitorHandles();
 }
 
+void DesktopMonitorManager::ResetMonitorHandles() {
+	physicalMonitorHandles.clear();
+}
+
 void DesktopMonitorManager::GetMonitorHandles() {
 	// this function is an odd beast
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnum, 0);
@@ -28,7 +33,12 @@ void DesktopMonitorManager::GetMonitorHandles() {
 
 	for each (HANDLE monitor in physicalMonitorHandles) {
 		if (!AddMonitorScaleFactor(monitor)) {
-			exit(EXIT_FAILURE);
+			// if the monitor handles are invalid
+			Sleep(1000);
+			// reset the handles
+			ResetMonitorHandles();
+			// get them again
+			GetMonitorHandles();
 		}
 	}
 }
