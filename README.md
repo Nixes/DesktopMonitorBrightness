@@ -1,5 +1,7 @@
 # DesktopMonitorBrightness
-A utility to allow laptop like monitor brightness control on a desktop. 
+A utility to allow laptop like monitor brightness control on a desktop.
+
+![Alt text](ping_graph_screenshot.PNG)
 
 Features:
   - Manual Brightness control from slider opened by clicking on system tray.
