@@ -4,6 +4,7 @@ A utility to allow laptop like monitor brightness control on a desktop.
 ![Alt text](ping_graph_screenshot.PNG)
 
 Features:
+  - Lightwight: zero average cpu usage, less than 400k memory usage
   - Manual Brightness control from slider opened by clicking on system tray.
   - Automatic brightness based on configured sunrise and sunset times.
 
