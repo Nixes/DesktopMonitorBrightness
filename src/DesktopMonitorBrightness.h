@@ -45,7 +45,6 @@ private:
 public:
 	const int GetBrightness();
 	bool Tests(std::string & error);
-	const int GetPollingTime();
 	DesktopMonitorManager();
 
 	static BOOL CALLBACK MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM dwData);
@@ -62,4 +61,10 @@ public:
 	void SetPollingTime(int polling_time);
 	void SetMaxBrightness(int max_brightness);
 	void SetMinBrightness(int min_brightness);
+
+	const float GetSunrisetime();
+	const float GetSunsettime();
+	const int GetPollingTime();
+	const int GetMaxBrightness();
+	const int GetMinBrightness();
 };

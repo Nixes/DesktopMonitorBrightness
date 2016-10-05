@@ -128,11 +128,6 @@ void DesktopMonitorManager::GetMonitorHandles() {
 }
 
 
- const int DesktopMonitorManager::GetPollingTime() {
-	return current_settings.polling_time;
-}
-
-
 // this must be public due to the callback shenanigans
 // this gets called each time EnumDisplayMonitors has another monitor to process
 BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM dwData) {
@@ -281,30 +276,47 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
 
  // bunch of generic setters for updating internal settings
- void DesktopMonitorManager::SetSunrisetime(float sunrisetime)
- {
+ void DesktopMonitorManager::SetSunrisetime(float sunrisetime) {
 	 current_settings.sunrise = sunrisetime;
  }
 
- void DesktopMonitorManager::SetSunsettime(float sunsettime)
- {
+ void DesktopMonitorManager::SetSunsettime(float sunsettime) {
 	 current_settings.sunset = sunsettime;
  }
 
- void DesktopMonitorManager::SetPollingTime(int polling_time)
- {
+ void DesktopMonitorManager::SetPollingTime(int polling_time) {
 	 current_settings.polling_time = polling_time;
  }
 
- void DesktopMonitorManager::SetMaxBrightness(int max_brightness)
- {
+ void DesktopMonitorManager::SetMaxBrightness(int max_brightness) {
 	 current_settings.max_global_brightness = max_brightness;
  }
 
- void DesktopMonitorManager::SetMinBrightness(int min_brightness)
- {
+ void DesktopMonitorManager::SetMinBrightness(int min_brightness) {
+	 current_settings.min_global_brightness = min_brightness;
  }
 
+
+ // bunch of generic getters for retreiving internal settings
+ const float DesktopMonitorManager::GetSunrisetime( ) {
+	 return current_settings.sunrise;
+ }
+
+ const float DesktopMonitorManager::GetSunsettime( ) {
+	 return current_settings.sunset;
+ }
+
+ const int DesktopMonitorManager::GetPollingTime( ) {
+	 return current_settings.polling_time;
+ }
+
+ const int DesktopMonitorManager::GetMaxBrightness( ) {
+	 return current_settings.max_global_brightness;
+ }
+
+ const int DesktopMonitorManager::GetMinBrightness( ) {
+	 return current_settings.min_global_brightness;
+ }
 
  bool DesktopMonitorManager::Tests(std::string &error) {
 	 bool return_value = true;
