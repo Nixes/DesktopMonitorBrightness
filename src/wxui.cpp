@@ -105,22 +105,21 @@ SettingsDialog::SettingsDialog(const wxString& title)
 
 
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunrise time")), flags);
-	sunrise_time = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	sunrise_time = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetSunrisetime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 	sizerTop->Add(sunrise_time, flags);
 
 
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunset time")), flags);
-	sunset_time = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	sunset_time = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetSunsettime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 	sizerTop->Add(sunset_time, flags);
 
 	// these two should ideally be the same control that allows you to set both the minimum and the maximum on the same slider
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Minimum Brightness")), flags);
-	min_slider = new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
+	min_slider = new wxSlider(this, 5800, mMan.GetMinBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
 	sizerTop->Add(min_slider, wxSizerFlags().Expand());
 
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Maximum Brightness")), flags);
-
-	max_slider = new wxSlider(this, 5800, mMan.GetBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
+	max_slider = new wxSlider(this, 5800, mMan.GetMaxBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
 	sizerTop->Add(max_slider, wxSizerFlags().Expand());
 
 	autobrightness_checkbox = new wxCheckBox(this, wxID_ANY, wxT("AutoBrightness on by default"));
@@ -141,6 +140,10 @@ SettingsDialog::~SettingsDialog() {
 }
 
 void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
+	// read settings from dialog
+
+
+
 	wxLogError(wxT("Saving Settings"));
 
 	// we now need to read these setting into the settings object
