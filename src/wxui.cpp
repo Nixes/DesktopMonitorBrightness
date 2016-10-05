@@ -10,6 +10,8 @@
 #include "wx/taskbar.h"
 #include "wx/slider.h"
 
+#include <wx/valnum.h> // required for wxFloatingPointValidator
+
 #include "wxui.h"
 
 // a global include file
@@ -99,18 +101,24 @@ SettingsDialog::SettingsDialog(const wxString& title)
 	wxSizerFlags flags;
 	flags.Border(wxALL, 10);
 
+	wxFloatingPointValidator<float>floatTimeValidator(2, 0, wxNUM_VAL_ZERO_AS_BLANK);
+	floatTimeValidator.SetRange(0, 24);
+
+	wxFloatingPointValidator<float>timeValidator(2, 0, wxNUM_VAL_ZERO_AS_BLANK);
+	timeValidator.SetRange(1, 3600); // between 1 second and 1 hour
+
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")), flags);
-	update_interval = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	update_interval = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, timeValidator);
 	sizerTop->Add(update_interval, flags);
 
 
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunrise time")), flags);
-	sunrise_time = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetSunrisetime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	sunrise_time = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetSunrisetime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, floatTimeValidator);
 	sizerTop->Add(sunrise_time, flags);
 
 
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunset time")), flags);
-	sunset_time = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetSunsettime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	sunset_time = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetSunsettime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, floatTimeValidator);
 	sizerTop->Add(sunset_time, flags);
 
 	// these two should ideally be the same control that allows you to set both the minimum and the maximum on the same slider
@@ -142,8 +150,24 @@ SettingsDialog::~SettingsDialog() {
 void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
 	// read settings from dialog
 
+	// read interval
+	double update_interval_double;
+	update_interval->GetValue().ToDouble(&update_interval_double);
+	mMan.SetPollingTime(update_interval_double);
 
+	// read sunrise time
+	double sunrise_double;
+	sunrise_time->GetValue().ToDouble(&sunrise_double);
+	mMan.SetSunrisetime( sunrise_double);
 
+	// read sunset time
+	double sunset_double;
+	sunset_time->GetValue().ToDouble(&sunset_double);
+	mMan.SetSunsettime(sunset_double);
+
+	// read min and max brigness
+	mMan.SetMinBrightness(min_slider->GetValue());
+	mMan.SetMaxBrightness(max_slider->GetValue());
 	wxLogError(wxT("Saving Settings"));
 
 	// we now need to read these setting into the settings object
