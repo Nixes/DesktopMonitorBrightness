@@ -165,12 +165,15 @@ void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
 	sunset_time->GetValue().ToDouble(&sunset_double);
 	mMan.SetSunsettime(sunset_double);
 
-	// read min and max brigness
+	// read min and max brightness
 	mMan.SetMinBrightness(min_slider->GetValue());
 	mMan.SetMaxBrightness(max_slider->GetValue());
-	wxLogError(wxT("Saving Settings"));
 
-	// we now need to read these setting into the settings object
+	// we save the settings to file
+	mMan.SaveSettings();
+	
+	// then we close the dialog
+	Close(true);
 }
 
 
