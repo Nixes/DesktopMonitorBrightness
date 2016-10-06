@@ -170,7 +170,9 @@ void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
 	mMan.SetMaxBrightness(max_slider->GetValue());
 
 	// we save the settings to file
-	mMan.SaveSettings();
+	if (!mMan.SaveSettings()) {
+		wxLogError(wxT("Failed to write settings to disk, is the program directory writable?"));
+	}
 	
 	// then we close the dialog
 	Close(true);
