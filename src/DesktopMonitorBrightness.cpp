@@ -114,12 +114,18 @@ void DesktopMonitorManager::GetMonitorHandles() {
 	return str;
 }
 
- void DesktopMonitorManager::SaveTextFile(std::string outFileName, std::string outputstring) {
+ bool DesktopMonitorManager::SaveTextFile(std::string outFileName, std::string outputstring) {
 	std::ofstream outFile;
 	outFile.open(outFileName);
 
 	outFile << outputstring;
 	outFile.close();
+	if (!outFile) {
+		// some kind of IO error occured
+		return false;
+	} else {
+		return true;
+	}
 }
 
  bool DesktopMonitorManager::FileExists(std::string fileLocation) {
@@ -230,7 +236,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 }
 
 // convert from settings struct to json file
- void DesktopMonitorManager::SaveSettings() {
+ bool DesktopMonitorManager::SaveSettings() {
 	json j;
 
 	j["sunrise"] = current_settings.sunrise;
@@ -241,7 +247,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
 	std::string settingsraw = j.dump();
 
-	SaveTextFile("settings.json", settingsraw);
+	return SaveTextFile("settings.json", settingsraw);
 	// then write string to file
 }
 

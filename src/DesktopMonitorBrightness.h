@@ -36,7 +36,7 @@ private:
 	// start file manip functions
 	std::string LoadTextFile(std::string inFileName);
 
-	void SaveTextFile(std::string outFileName, std::string outputstring);
+	bool SaveTextFile(std::string outFileName, std::string outputstring);
 
 	bool FileExists(std::string fileLocation);
 	// end file manip functions
@@ -52,7 +52,7 @@ public:
 	void SetBrightnessFade(int targetBrightness);
 	float SetBasedOnTimeOfDay();
 
-	void SaveSettings();
+	bool SaveSettings();
 	void RestoreSettings(std::string settings_location);
 
 	// bunch of generic getters and setters
