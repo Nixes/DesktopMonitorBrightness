@@ -496,6 +496,7 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GeocodeGrabber.cpp" />
     <ClCompile Include="src\DesktopMonitorBrightness.cpp" />
     <ClCompile Include="src\wxui.cpp" />
   </ItemGroup>
