@@ -12,3 +12,4 @@
 *.opendb
 *.json
 packages/
+*.dll
