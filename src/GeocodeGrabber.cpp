@@ -23,6 +23,8 @@ private:
 		// Build request URI and start the request.
 		uri_builder builder = uri_builder();
 		builder.append_query(U("address"), address.c_str() );
+		builder.append_query(U("key"), api_key.c_str() );
+
 		client
 			.request(methods::GET, builder.to_string())
 			// continue when the response is available
