@@ -44,7 +44,7 @@ private:
 				return pplx::task_from_result(json::value());
 			})
 			// continue when the JSON value is available
-			.then([return_string](pplx::task<json::value> previousTask) {
+			.then([&return_string](pplx::task<json::value> previousTask) {
 				// get the JSON value from the task and display content from it
 				try {
 					json::value const & v = previousTask.get();
@@ -55,12 +55,15 @@ private:
 				}
 			})
 			.wait();
+			return return_string;
 	}
 
 public:
+	GeocodeGrabber() {}
+
 	void testApi() {
 		std::string address = "John St, Hawthorn VIC";
-		GetLongLatFromAddress(address);
+		std::cout << GetLongLatFromAddress(address);
 	}
 
 };
