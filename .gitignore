@@ -11,3 +11,4 @@
 *.ipch
 *.opendb
 *.json
+packages/
