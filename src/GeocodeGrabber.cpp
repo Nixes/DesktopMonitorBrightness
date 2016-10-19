@@ -21,8 +21,8 @@ private:
 		http_client client(U("https://maps.googleapis.com/maps/api/geocode/json"));
 
 		// Build request URI and start the request.
-		uri_builder builder(U(""));
-		builder.append_query(U("address"), U("something"));
+		uri_builder builder = uri_builder();
+		builder.append_query(U("address"), address.c_str() );
 		client
 			.request(methods::GET, builder.to_string())
 			// continue when the response is available
