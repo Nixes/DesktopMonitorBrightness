@@ -11,3 +11,6 @@
 *.ipch
 *.opendb
 *.json
+packages/
+*.dll
+*.exe
