@@ -2,7 +2,6 @@
 *.tlog
 *.1.tlog
 *.log
-*.pdb
 *.obj
 *.iobj
 *.ipdb
