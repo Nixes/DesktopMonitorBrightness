@@ -241,23 +241,6 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
 // convert from settings struct to json file
  bool DesktopMonitorManager::SaveSettings() {
-	/*
-	nlohmann::json j;
-
-	j["auto_suntime_calc"] = current_settings.auto_suntime_calc;
-	j["longitude"] = current_settings.longitude;
-	j["latitude"] = current_settings.latitude;
-
-	j["sunrise"] = current_settings.sunrise;
-	j["sunset"] = current_settings.sunset;
-	j["polling_time"] = current_settings.polling_time;
-	j["max_global_brightness"] = current_settings.max_global_brightness;
-	j["min_global_brightness"] = current_settings.min_global_brightness;
-
-	std::string settingsraw = j.dump();
-	*/
-
-	// casablanca version
 	json::value obj;
 
 	obj[U("auto_suntime_calc")] = json::value::boolean(current_settings.auto_suntime_calc);
@@ -273,9 +256,6 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	obj.serialize(json_string_stream);
 
 	return SaveTextFile("settings.json", json_string_stream.str());
-
-	//return SaveTextFile("settings.json", settingsraw);
-	// then write string to file
 }
 
 // convert from json file to settings struct
@@ -288,21 +268,6 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 		std::string configfileraw = LoadTextFile(settings_location);
 		//std::cout << configfileraw;
 
-		/*
-		nlohmann::json j3 = nlohmann::json::parse(configfileraw);
-
-		current_settings.auto_suntime_calc = j3["auto_suntime_calc"];
-		current_settings.longitude = j3["longitude"];
-		current_settings.latitude = j3["latitude"];
-
-		current_settings.sunrise = j3["sunrise"];
-		current_settings.sunset = j3["sunset"];
-		current_settings.polling_time = j3["polling_time"];
-		current_settings.max_global_brightness = j3["max_global_brightness"];
-		current_settings.min_global_brightness = j3["min_global_brightness"];
-		*/
-
-		// casablanca version
 		std::stringstream json_string_stream;
 		json_string_stream << configfileraw;
 		json::value obj = json::value::parse(json_string_stream);
@@ -316,7 +281,6 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 		current_settings.polling_time = obj.at(U("polling_time")).as_double();
 		current_settings.max_global_brightness = obj.at(U("max_global_brightness")).as_double();
 		current_settings.min_global_brightness = obj.at(U("min_global_brightness")).as_double();
-
 	}
 	else {
 		//std::cout << "Failed to load config, making a new one based on defualts";

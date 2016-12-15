@@ -24,6 +24,3 @@
 // windows specific
 #include <windows.h> // needed for windows types
 #include <HighLevelMonitorConfigurationAPI.h> // for using window api to get and set brightness
-
-
-#include "json.hpp" // from https://github.com/nlohmann/json
