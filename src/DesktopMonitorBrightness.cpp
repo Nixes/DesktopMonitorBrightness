@@ -5,7 +5,7 @@
 // include geocodeing and sunrise/sunset calculation lib
 #include "GeocodeGrabber.hpp"
 
-GeocodeGrabber geoGrab;
+GeocodeGrabber geoGrab();
 
 // refs with good leads:
 // - http://stackoverflow.com/questions/26541484/enumdisplaymonitors-callback
@@ -241,7 +241,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
 // convert from settings struct to json file
  bool DesktopMonitorManager::SaveSettings() {
-	json j;
+	 nlohmann::json j;
 
 	j["auto_suntime_calc"] = current_settings.auto_suntime_calc;
 	j["longitude"] = current_settings.longitude;
@@ -262,14 +262,18 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 // convert from json file to settings struct
  void DesktopMonitorManager::RestoreSettings(std::string settings_location) {
 	// provide some defaults
-	current_settings = { 7.00 ,18.00 ,60 ,0 ,100 };
+	current_settings = { 0 ,0 ,true ,7.00 ,18.00 ,60 ,0 ,100 };
 
 
 	if (FileExists(settings_location)) {
 		std::string configfileraw = LoadTextFile(settings_location);
 		//std::cout << configfileraw;
 
-		json j3 = json::parse(configfileraw);
+		nlohmann::json j3 = nlohmann::json::parse(configfileraw);
+
+		current_settings.auto_suntime_calc = j3["auto_suntime_calc"];
+		current_settings.longitude = j3["longitude"];
+		current_settings.latitude = j3["latitude"];
 
 		current_settings.sunrise = j3["sunrise"];
 		current_settings.sunset = j3["sunset"];
@@ -282,6 +286,9 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 		SaveSettings();
 	}
 
+	if (current_settings.auto_suntime_calc) {
+
+	}
 }
 
  const int DesktopMonitorManager::GetBrightness() {
@@ -359,7 +366,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	 }
 
 	 // check get sun time ratio function
-	 current_settings = { (float)1,(float)2,60,0,100 };
+	 current_settings = {0,0,false, (float)1,(float)2,60,0,100 };
 	 if (value = GetSunTimeRatio(1.5) != 0.5) {
 		 return_value = false;
 		 buff << "Failed to validate GetSunTimeRatio test1: "<< value << "\n";

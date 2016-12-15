@@ -27,4 +27,3 @@
 
 
 #include "json.hpp" // from https://github.com/nlohmann/json
-using json = nlohmann::json; // and its relevant namespace
