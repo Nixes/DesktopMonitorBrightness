@@ -5,7 +5,7 @@
 // include geocodeing and sunrise/sunset calculation lib
 #include "GeocodeGrabber.hpp"
 
-GeocodeGrabber geoGrab();
+GeocodeGrabber geoGrab = GeocodeGrabber("AIzaSyD - NPqot8WGQyK0GtcrkMasHPIzKHB - HTo", "AIzaSyBF70jGFpFNUGJFMUOqVLQfTikvKRrdc0U");
 
 // refs with good leads:
 // - http://stackoverflow.com/questions/26541484/enumdisplaymonitors-callback
@@ -286,8 +286,12 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 		SaveSettings();
 	}
 
-	if (current_settings.auto_suntime_calc) {
+	if (current_settings.auto_suntime_calc && current_settings.longitude != 0 && current_settings.latitude != 0 ) {
+		geoGrab.SetLongitude(current_settings.longitude);
+		geoGrab.SetLatitude(current_settings.latitude);
 
+		current_settings.sunrise = geoGrab.GetSunrise();
+		current_settings.sunset = geoGrab.GetSunset();
 	}
 }
 
