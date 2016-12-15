@@ -241,7 +241,8 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
 // convert from settings struct to json file
  bool DesktopMonitorManager::SaveSettings() {
-	 nlohmann::json j;
+	/*
+	nlohmann::json j;
 
 	j["auto_suntime_calc"] = current_settings.auto_suntime_calc;
 	j["longitude"] = current_settings.longitude;
@@ -254,8 +255,26 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	j["min_global_brightness"] = current_settings.min_global_brightness;
 
 	std::string settingsraw = j.dump();
+	*/
 
-	return SaveTextFile("settings.json", settingsraw);
+	// casablanca version
+	json::value obj;
+
+	obj[U("auto_suntime_calc")] = current_settings.auto_suntime_calc;
+	obj[U("longitude")] = current_settings.longitude;
+	obj[U("latitude")] = current_settings.latitude;
+
+	obj[U("sunrise")] = current_settings.sunrise;
+	obj[U("sunset")] = current_settings.sunset;
+	obj[U("polling_time")] = current_settings.polling_time;
+	obj[U("max_global_brightness")] = current_settings.max_global_brightness;
+	obj[U("min_global_brightness")] = current_settings.min_global_brightness;
+	std::stringstream json_string_stream;
+	obj.serialize(json_string_stream);
+
+	return SaveTextFile("settings.json", json_string_stream.str());
+
+	//return SaveTextFile("settings.json", settingsraw);
 	// then write string to file
 }
 
@@ -269,6 +288,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 		std::string configfileraw = LoadTextFile(settings_location);
 		//std::cout << configfileraw;
 
+		/*
 		nlohmann::json j3 = nlohmann::json::parse(configfileraw);
 
 		current_settings.auto_suntime_calc = j3["auto_suntime_calc"];
@@ -280,6 +300,23 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 		current_settings.polling_time = j3["polling_time"];
 		current_settings.max_global_brightness = j3["max_global_brightness"];
 		current_settings.min_global_brightness = j3["min_global_brightness"];
+		*/
+
+		// casablanca version
+		std::stringstream json_string_stream;
+		json_string_stream << configfileraw;
+		json::value obj = json::value::parse(json_string_stream);
+
+		current_settings.auto_suntime_calc = obj.at(U("auto_suntime_calc")).as_bool();
+		current_settings.longitude = obj.at(U("longitude")).as_double();
+		current_settings.latitude = obj.at(U("latitude")).as_double();
+
+		current_settings.sunrise = obj.at(U("sunrise")).as_double();
+		current_settings.sunset = obj.at(U("sunset")).as_double();
+		current_settings.polling_time = obj.at(U("polling_time")).as_double();
+		current_settings.max_global_brightness = obj.at(U("max_global_brightness")).as_double();
+		current_settings.min_global_brightness = obj.at(U("min_global_brightness")).as_double();
+
 	}
 	else {
 		//std::cout << "Failed to load config, making a new one based on defualts";
