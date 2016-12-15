@@ -49,6 +49,8 @@ public:
 	virtual ~SettingsDialog();
 
 protected:
+	wxTextCtrl* longitude_text;
+	wxTextCtrl* latitude_text;
 	wxTextCtrl* update_interval;
 	wxTextCtrl* sunrise_time;
 	wxTextCtrl* sunset_time;

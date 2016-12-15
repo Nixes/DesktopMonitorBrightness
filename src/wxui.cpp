@@ -20,6 +20,9 @@
 // include brightness setting functions
 #include "DesktopMonitorBrightness.h"
 
+// include geocodeing and sunrise/sunset calculation lib
+#include "GeocodeGrabber.hpp"
+
 //#define testing
 
 // ----------------------------------------------------------------------------
@@ -36,6 +39,7 @@ static bool AutoBrightness = true;
 wxTimer* auto_brightness_timer;
 
 DesktopMonitorManager mMan;
+GeocodeGrabber geoGrab;
 
 
 void UpdateTimer() {
@@ -106,6 +110,16 @@ SettingsDialog::SettingsDialog(const wxString& title)
 
 	wxFloatingPointValidator<float>timeValidator(2, 0, wxNUM_VAL_ZERO_AS_BLANK);
 	timeValidator.SetRange(1, 3600); // between 1 second and 1 hour
+
+	// start location specific settings
+	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Longitude")), flags);
+	longitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	sizerTop->Add(longitude_text, flags);
+
+	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Latitude")), flags);
+	latitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	sizerTop->Add(latitude_text, flags);
+	// end location specific settings
 
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")), flags);
 	update_interval = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, timeValidator);

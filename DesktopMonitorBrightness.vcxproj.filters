@@ -32,15 +32,15 @@
     <ClInclude Include="src\DesktopMonitorBrightness.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\GeocodeGrabber.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\wxui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DesktopMonitorBrightness.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GeocodeGrabber.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

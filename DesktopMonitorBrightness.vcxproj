@@ -496,12 +496,12 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\GeocodeGrabber.cpp" />
     <ClCompile Include="src\DesktopMonitorBrightness.cpp" />
     <ClCompile Include="src\wxui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\DesktopMonitorBrightness.h" />
+    <ClInclude Include="src\GeocodeGrabber.hpp" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\targetver.h" />
     <ClInclude Include="src\wxui.h" />
