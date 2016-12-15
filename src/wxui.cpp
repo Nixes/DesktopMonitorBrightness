@@ -20,9 +20,6 @@
 // include brightness setting functions
 #include "DesktopMonitorBrightness.h"
 
-// include geocodeing and sunrise/sunset calculation lib
-#include "GeocodeGrabber.hpp"
-
 //#define testing
 
 // ----------------------------------------------------------------------------
@@ -39,7 +36,6 @@ static bool AutoBrightness = true;
 wxTimer* auto_brightness_timer;
 
 DesktopMonitorManager mMan;
-GeocodeGrabber geoGrab;
 
 
 void UpdateTimer() {

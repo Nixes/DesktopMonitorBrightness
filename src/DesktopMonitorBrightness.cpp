@@ -2,6 +2,10 @@
 #include <stdlib.h>  // used for sleep function
 #include "DesktopMonitorBrightness.h"
 
+// include geocodeing and sunrise/sunset calculation lib
+#include "GeocodeGrabber.hpp"
+
+GeocodeGrabber geoGrab;
 
 // refs with good leads:
 // - http://stackoverflow.com/questions/26541484/enumdisplaymonitors-callback
@@ -238,6 +242,10 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 // convert from settings struct to json file
  bool DesktopMonitorManager::SaveSettings() {
 	json j;
+
+	j["auto_suntime_calc"] = current_settings.auto_suntime_calc;
+	j["longitude"] = current_settings.longitude;
+	j["latitude"] = current_settings.latitude;
 
 	j["sunrise"] = current_settings.sunrise;
 	j["sunset"] = current_settings.sunset;

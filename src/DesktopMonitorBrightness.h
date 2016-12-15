@@ -1,4 +1,11 @@
 struct settings {
+	// used for automatic calculation of sunrise/sunset times
+	float longitude;
+	float latitude;
+
+	// if true tells the class to generate sunrise and sunset times automatically
+	bool auto_suntime_calc;
+
 	// sunrise in 24 decimal hour time
 	float sunrise;
 	// sunset in 24 decimal hour time
