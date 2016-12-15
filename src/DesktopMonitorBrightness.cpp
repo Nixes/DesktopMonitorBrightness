@@ -5,8 +5,6 @@
 // include geocodeing and sunrise/sunset calculation lib
 #include "GeocodeGrabber.hpp"
 
-GeocodeGrabber geoGrab = GeocodeGrabber("AIzaSyD - NPqot8WGQyK0GtcrkMasHPIzKHB - HTo", "AIzaSyBF70jGFpFNUGJFMUOqVLQfTikvKRrdc0U");
-
 // refs with good leads:
 // - http://stackoverflow.com/questions/26541484/enumdisplaymonitors-callback
 // - http://stackoverflow.com/questions/34091968/how-to-use-getmonitorcapabilities-and-getmonitorbrightness-functions
@@ -261,6 +259,8 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
  // uses GeocodeGrabber to guestimate current long/lat and uses this to calculate sunrise/sunset times
  void DesktopMonitorManager::AutoUpdateSuntime() {
+	 GeocodeGrabber geoGrab = GeocodeGrabber("AIzaSyD - NPqot8WGQyK0GtcrkMasHPIzKHB - HTo", "AIzaSyBF70jGFpFNUGJFMUOqVLQfTikvKRrdc0U");
+
 	if (current_settings.auto_suntime_calc) {
 		if (current_settings.longitude == 0 || current_settings.latitude == 0) {
 			// determine longitude and latitude automatically from ip address
