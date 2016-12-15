@@ -13,10 +13,10 @@ struct settings {
 	// time to wait between updating brightness
 	int polling_time;
 
-	// maximum brightness to be set
-	int max_global_brightness;
 	// minimum brightness to be set
 	int min_global_brightness;
+	// maximum brightness to be set
+	int max_global_brightness;
 };
 
 class DesktopMonitorManager {
