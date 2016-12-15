@@ -353,4 +353,10 @@ public:
 	double GetLatitude() {
 		return latitude;
 	}
+	void SetLongitude(double tmp_longitude) {
+		longitude = tmp_longitude;
+	}
+	void SetLatitude(double tmp_latitude) {
+		latitude = tmp_latitude;
+	}
 };
