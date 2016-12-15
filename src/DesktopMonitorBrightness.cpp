@@ -260,7 +260,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	// casablanca version
 	json::value obj;
 
-	obj[U("auto_suntime_calc")] = current_settings.auto_suntime_calc;
+	obj[U("auto_suntime_calc")] = json::value::boolean(current_settings.auto_suntime_calc);
 	obj[U("longitude")] = current_settings.longitude;
 	obj[U("latitude")] = current_settings.latitude;
 
