@@ -60,6 +60,7 @@ public:
 	float SetBasedOnTimeOfDay();
 
 	bool SaveSettings();
+	void AutoUpdateSuntime();
 	void RestoreSettings(std::string settings_location);
 
 	// bunch of generic getters and setters
@@ -74,4 +75,6 @@ public:
 	const int GetPollingTime();
 	const int GetMaxBrightness();
 	const int GetMinBrightness();
+	const double GetLongitude();
+	const double GetLatitude();
 };

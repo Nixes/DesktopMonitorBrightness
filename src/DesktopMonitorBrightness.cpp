@@ -22,6 +22,7 @@ std::vector<HANDLE>  physicalMonitorHandles;
 
 DesktopMonitorManager::DesktopMonitorManager() {
 	RestoreSettings("settings.json");
+	AutoUpdateSuntime();
 
 	GetMonitorHandles();
 }
@@ -258,6 +259,32 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	return SaveTextFile("settings.json", json_string_stream.str());
 }
 
+ // uses GeocodeGrabber to guestimate current long/lat and uses this to calculate sunrise/sunset times
+ void DesktopMonitorManager::AutoUpdateSuntime() {
+	if (current_settings.auto_suntime_calc) {
+		if (current_settings.longitude == 0 || current_settings.latitude == 0) {
+			// determine longitude and latitude automatically from ip address
+			geoGrab.GetLongLatFromIp();
+
+			// store recieved long/lat values in settings for later use
+			current_settings.longitude = geoGrab.GetLongitude();
+			current_settings.latitude = geoGrab.GetLongitude();
+
+			current_settings.sunrise = geoGrab.GetSunrise();
+			current_settings.sunset = geoGrab.GetSunset();
+
+			// make sure these changes are saved to config
+			SaveSettings();
+		} else {
+			geoGrab.SetLongitude(current_settings.longitude);
+			geoGrab.SetLatitude(current_settings.latitude);
+
+			current_settings.sunrise = geoGrab.GetSunrise();
+			current_settings.sunset = geoGrab.GetSunset();
+		 }
+	 }
+ }
+
 // convert from json file to settings struct
  void DesktopMonitorManager::RestoreSettings(std::string settings_location) {
 	// provide some defaults
@@ -285,14 +312,6 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	else {
 		//std::cout << "Failed to load config, making a new one based on defualts";
 		SaveSettings();
-	}
-
-	if (current_settings.auto_suntime_calc && current_settings.longitude != 0 && current_settings.latitude != 0 ) {
-		geoGrab.SetLongitude(current_settings.longitude);
-		geoGrab.SetLatitude(current_settings.latitude);
-
-		current_settings.sunrise = geoGrab.GetSunrise();
-		current_settings.sunset = geoGrab.GetSunset();
 	}
 }
 
@@ -342,6 +361,12 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
  const int DesktopMonitorManager::GetMinBrightness( ) {
 	 return current_settings.min_global_brightness;
+ }
+ const double DesktopMonitorManager::GetLongitude() {
+	 return current_settings.longitude;
+ }
+ const double DesktopMonitorManager::GetLatitude() {
+	 return current_settings.latitude;
  }
 
  bool DesktopMonitorManager::Tests(std::string &error) {
