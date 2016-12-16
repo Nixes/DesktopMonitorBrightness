@@ -268,7 +268,7 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 
 			// store recieved long/lat values in settings for later use
 			current_settings.longitude = geoGrab.GetLongitude();
-			current_settings.latitude = geoGrab.GetLongitude();
+			current_settings.latitude = geoGrab.GetLatitude();
 
 			current_settings.sunrise = geoGrab.GetSunrise();
 			current_settings.sunset = geoGrab.GetSunset();
