@@ -109,11 +109,11 @@ SettingsDialog::SettingsDialog(const wxString& title)
 
 	// start location specific settings
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Longitude")), flags);
-	longitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	longitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetLongitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 	sizerTop->Add(longitude_text, flags);
 
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Latitude")), flags);
-	latitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+	latitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetLatitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 	sizerTop->Add(latitude_text, flags);
 	// end location specific settings
 
