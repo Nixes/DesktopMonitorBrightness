@@ -368,6 +368,9 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
  const double DesktopMonitorManager::GetLatitude() {
 	 return current_settings.latitude;
  }
+ const bool DesktopMonitorManager::GetAutoSuntimeCalc() {
+	 return current_settings.auto_suntime_calc;
+ }
 
  bool DesktopMonitorManager::Tests(std::string &error) {
 	 bool return_value = true;

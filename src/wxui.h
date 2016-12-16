@@ -57,6 +57,7 @@ protected:
 	wxSlider* min_slider;
 	wxSlider* max_slider;
 	wxCheckBox* autobrightness_checkbox;
+	wxCheckBox* auto_suntime_calc_checkbox;
 
 	void OnExit(wxCommandEvent& event);
 	void OnCloseWindow(wxCloseEvent& event);

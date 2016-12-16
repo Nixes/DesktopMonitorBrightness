@@ -77,4 +77,5 @@ public:
 	const int GetMinBrightness();
 	const double GetLongitude();
 	const double GetLatitude();
+	const bool GetAutoSuntimeCalc();
 };

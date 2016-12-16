@@ -108,6 +108,10 @@ SettingsDialog::SettingsDialog(const wxString& title)
 	timeValidator.SetRange(1, 3600); // between 1 second and 1 hour
 
 	// start location specific settings
+	auto_suntime_calc_checkbox = new wxCheckBox(this, wxID_ANY, wxT("Automatically update suntimes using GeoIP"));
+	auto_suntime_calc_checkbox->SetValue(mMan.GetAutoSuntimeCalc());
+	sizerTop->Add(auto_suntime_calc_checkbox, flags);
+
 	sizerTop->Add(new wxStaticText(this, wxID_ANY, wxT("Longitude")), flags);
 	longitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetLongitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 	sizerTop->Add(longitude_text, flags);
@@ -147,6 +151,13 @@ SettingsDialog::SettingsDialog(const wxString& title)
 	sizerBtns->Add(new wxButton(this, wxID_SAVE, wxT("Save")), flags);
 	sizerBtns->Add(new wxButton(this, wxID_CANCEL, wxT("Discard")), flags);
 	sizerTop->Add(sizerBtns, flags.Align(wxALIGN_CENTER_HORIZONTAL));
+
+
+	// disable some sections when auto_suntime_calc is true
+	if (mMan.GetAutoSuntimeCalc()) {
+		sunrise_time->SetEditable(false);
+		sunset_time->SetEditable(false);
+	}
 
 	// actually initiate the sizer
 	SetSizerAndFit(sizerTop);
