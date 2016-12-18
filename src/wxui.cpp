@@ -9,6 +9,7 @@
 
 #include "wx/taskbar.h"
 #include "wx/slider.h"
+#include "wx/notebook.h"
 
 #include <wx/valnum.h> // required for wxFloatingPointValidator
 
@@ -106,6 +107,12 @@ SettingsDialog::SettingsDialog(const wxString& title)
 
 	wxFloatingPointValidator<float>timeValidator(2, 0, wxNUM_VAL_ZERO_AS_BLANK);
 	timeValidator.SetRange(1, 3600); // between 1 second and 1 hour
+
+	// create panel for notbook to sit in
+	wxPanel* panel = new wxPanel(this, wxID_ANY);
+	// create parent notebook
+	wxNotebook* notebook = new wxNotebook(panel, wxID_ANY);
+
 
 	// start location specific settings
 	auto_suntime_calc_checkbox = new wxCheckBox(this, wxID_ANY, wxT("Automatically update suntimes using GeoIP"));
