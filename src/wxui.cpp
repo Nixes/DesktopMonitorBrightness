@@ -176,6 +176,9 @@ SettingsDialog::SettingsDialog(const wxString& title)
 	if (mMan.GetAutoSuntimeCalc()) {
 		sunrise_time->SetEditable(false);
 		sunset_time->SetEditable(false);
+	} else {
+		sunrise_time->SetEditable(true);
+		sunset_time->SetEditable(true);
 	}
 
 	// actually initiate the sizer
