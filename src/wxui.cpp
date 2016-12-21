@@ -128,7 +128,7 @@ SettingsDialog::SettingsDialog(const wxString& title)
 			latitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetLatitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 			location_sizer->Add(latitude_text, flags);
 		location_panel->SetSizer(location_sizer);
-	notebook->AddPage(location_panel, L"Location");
+	notebook->AddPage(location_panel, wxT("Location"));
 	// end location specific settings
 
 	// start General Settings
@@ -165,7 +165,7 @@ SettingsDialog::SettingsDialog(const wxString& title)
 			sizerBtns->Add(new wxButton(this, wxID_CANCEL, wxT("Discard")), flags);
 			general_sizer->Add(sizerBtns, flags.Align(wxALIGN_CENTER_HORIZONTAL));
 		general_panel->SetSizer(general_sizer);
-	notebook->AddPage(general_panel, L"General");
+	notebook->AddPage(general_panel, wxT("General"));
 	// end General Settings
 
 	// add the notebook to the main panel
