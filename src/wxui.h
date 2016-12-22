@@ -42,7 +42,7 @@ public:
 
 
 // provides an easy to use interface to modify settings
-class SettingsDialog : public wxDialog
+class SettingsDialog : public wxPropertySheetDialog
 {
 public:
 	SettingsDialog(const wxString& title);

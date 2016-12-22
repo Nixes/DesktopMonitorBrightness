@@ -10,6 +10,7 @@
 #include "wx/taskbar.h"
 #include "wx/slider.h"
 #include "wx/notebook.h"
+#include "wx/propdlg.h"
 
 #include <wx/valnum.h> // required for wxFloatingPointValidator
 
@@ -91,12 +92,12 @@ bool MyApp::OnInit()
 
 wxBEGIN_EVENT_TABLE(SettingsDialog, wxDialog)
 	EVT_CLOSE(SettingsDialog::OnCloseWindow)
-	EVT_BUTTON(wxID_SAVE,SettingsDialog::onSave)
+	EVT_BUTTON(wxOK,SettingsDialog::onSave)
 wxEND_EVENT_TABLE()
 
 // constructor
 SettingsDialog::SettingsDialog(const wxString& title)
-	: wxDialog(NULL, wxID_ANY, title)
+	: wxPropertySheetDialog(NULL, wxID_ANY, title)
 {
 	wxSizerFlags flags;
 	flags.Border(wxALL, 10);
@@ -107,12 +108,9 @@ SettingsDialog::SettingsDialog(const wxString& title)
 	wxFloatingPointValidator<float>timeValidator(2, 0, wxNUM_VAL_ZERO_AS_BLANK);
 	timeValidator.SetRange(1, 3600); // between 1 second and 1 hour
 
-	// create panel for notbook to sit in
-	wxPanel* panel = new wxPanel(this, wxID_ANY);
-	// create parent notebook
-	wxNotebook* notebook = new wxNotebook(panel, wxID_ANY);
+
 		// start location specific settings
-		wxPanel* location_panel = new wxPanel(notebook, wxID_ANY);
+		wxPanel* location_panel = new wxPanel(GetBookCtrl(), wxID_ANY);
 			wxSizer * const location_sizer = new wxBoxSizer(wxVERTICAL);
 				auto_suntime_calc_checkbox = new wxCheckBox(this, wxID_ANY, wxT("Automatically update suntimes using GeoIP"));
 				auto_suntime_calc_checkbox->SetValue(mMan.GetAutoSuntimeCalc());
@@ -126,11 +124,11 @@ SettingsDialog::SettingsDialog(const wxString& title)
 				latitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetLatitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 				location_sizer->Add(latitude_text, flags);
 			location_panel->SetSizer(location_sizer);
-		notebook->AddPage(location_panel, wxT("Location"));
+		GetBookCtrl()->AddPage(location_panel, wxT("Location"));
 		// end location specific settings
 
 		// start General Settings
-		wxPanel* general_panel = new wxPanel(notebook, wxID_ANY);
+		wxPanel* general_panel = new wxPanel(GetBookCtrl(), wxID_ANY);
 			wxSizer * const general_sizer = new wxBoxSizer(wxVERTICAL);
 				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")), flags);
 				update_interval = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, timeValidator);
@@ -163,12 +161,8 @@ SettingsDialog::SettingsDialog(const wxString& title)
 				sizerBtns->Add(new wxButton(this, wxID_CANCEL, wxT("Discard")), flags);
 				general_sizer->Add(sizerBtns, flags.Align(wxALIGN_CENTER_HORIZONTAL));
 			general_panel->SetSizer(general_sizer);
-		notebook->AddPage(general_panel, wxT("General"));
-		// end General Settings
-	// add the notebook to the main panel
-	wxBoxSizer* panel_sizer = new wxBoxSizer(wxHORIZONTAL);
-	panel_sizer->Add(notebook, 1, wxEXPAND);
-	panel->SetSizer(panel_sizer);
+		GetBookCtrl()->AddPage(general_panel, wxT("General"));
+		// end General Settings;
 
 	// disable some sections when auto_suntime_calc is true
 	if (mMan.GetAutoSuntimeCalc()) {
@@ -179,12 +173,9 @@ SettingsDialog::SettingsDialog(const wxString& title)
 		sunset_time->SetEditable(true);
 	}
 
-	// Set up the sizer for the frame and resize the frame
-	// according to its contents
-	wxBoxSizer* top_sizer = new wxBoxSizer(wxHORIZONTAL);
-	top_sizer->SetMinSize(250, 100);
-	top_sizer->Add(panel, 1, wxEXPAND);
-	SetSizerAndFit(top_sizer);
+	CreateButtons(wxOK | wxCANCEL);
+
+	LayoutDialog();
 
 	// actually initiate the sizer
 	//SetSizerAndFit(panel_sizer);
