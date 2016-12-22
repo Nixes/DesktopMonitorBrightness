@@ -166,9 +166,9 @@ SettingsDialog::SettingsDialog(const wxString& title)
 		notebook->AddPage(general_panel, wxT("General"));
 		// end General Settings
 	// add the notebook to the main panel
-	wxBoxSizer* panel_sizer = new wxBoxSizer(wxVERTICAL);
-
+	wxBoxSizer* panel_sizer = new wxBoxSizer(wxHORIZONTAL);
 	panel_sizer->Add(notebook, 1, wxEXPAND);
+	panel->SetSizer(panel_sizer);
 
 	// disable some sections when auto_suntime_calc is true
 	if (mMan.GetAutoSuntimeCalc()) {
@@ -179,9 +179,16 @@ SettingsDialog::SettingsDialog(const wxString& title)
 		sunset_time->SetEditable(true);
 	}
 
+	// Set up the sizer for the frame and resize the frame
+	// according to its contents
+	wxBoxSizer* top_sizer = new wxBoxSizer(wxHORIZONTAL);
+	top_sizer->SetMinSize(250, 100);
+	top_sizer->Add(panel, 1, wxEXPAND);
+	SetSizerAndFit(top_sizer);
+
 	// actually initiate the sizer
-	SetSizerAndFit(panel_sizer);
-	Centre();
+	//SetSizerAndFit(panel_sizer);
+	//Centre();
 }
 
 SettingsDialog::~SettingsDialog() {
