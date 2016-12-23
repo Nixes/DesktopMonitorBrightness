@@ -99,8 +99,10 @@ wxEND_EVENT_TABLE()
 SettingsDialog::SettingsDialog(const wxString& title)
 	: wxPropertySheetDialog(NULL, wxID_ANY, title)
 {
-	wxSizerFlags flags;
-	flags.Border(wxALL, 10);
+	//wxSizerFlags flags;
+	//flags.Border(wxALL, 10);
+
+	CreateButtons(wxOK | wxCANCEL);
 
 	wxFloatingPointValidator<float>floatTimeValidator(2, 0, wxNUM_VAL_ZERO_AS_BLANK);
 	floatTimeValidator.SetRange(0, 24);
@@ -110,7 +112,7 @@ SettingsDialog::SettingsDialog(const wxString& title)
 
 
 		// start location specific settings
-		wxPanel* location_panel = new wxPanel(GetBookCtrl(), wxID_ANY);
+		/*wxPanel* location_panel = new wxPanel(GetBookCtrl(), wxID_ANY);
 			wxSizer * const location_sizer = new wxBoxSizer(wxVERTICAL);
 				auto_suntime_calc_checkbox = new wxCheckBox(this, wxID_ANY, wxT("Automatically update suntimes using GeoIP"));
 				auto_suntime_calc_checkbox->SetValue(mMan.GetAutoSuntimeCalc());
@@ -124,42 +126,37 @@ SettingsDialog::SettingsDialog(const wxString& title)
 				latitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetLatitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 				location_sizer->Add(latitude_text, flags);
 			location_panel->SetSizer(location_sizer);
-		GetBookCtrl()->AddPage(location_panel, wxT("Location"));
+		GetBookCtrl()->AddPage(location_panel, wxT("Location")); */
 		// end location specific settings
 
 		// start General Settings
 		wxPanel* general_panel = new wxPanel(GetBookCtrl(), wxID_ANY);
 			wxSizer * const general_sizer = new wxBoxSizer(wxVERTICAL);
-				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")), flags);
+				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")));
 				update_interval = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, timeValidator);
-				general_sizer->Add(update_interval, flags);
+				general_sizer->Add(update_interval);
 
 
-				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunrise time")), flags);
+				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunrise time")));
 				sunrise_time = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetSunrisetime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, floatTimeValidator);
-				general_sizer->Add(sunrise_time, flags);
+				general_sizer->Add(sunrise_time);
 
 
-				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunset time")), flags);
+				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunset time")));
 				sunset_time = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetSunsettime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, floatTimeValidator);
-				general_sizer->Add(sunset_time, flags);
+				general_sizer->Add(sunset_time);
 
 				// these two should ideally be the same control that allows you to set both the minimum and the maximum on the same slider
-				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Minimum Brightness")), flags);
+				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Minimum Brightness")));
 				min_slider = new wxSlider(this, 5800, mMan.GetMinBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
 				general_sizer->Add(min_slider, wxSizerFlags().Expand());
 
-				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Maximum Brightness")), flags);
+				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Maximum Brightness")));
 				max_slider = new wxSlider(this, 5800, mMan.GetMaxBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
 				general_sizer->Add(max_slider, wxSizerFlags().Expand());
 
 				autobrightness_checkbox = new wxCheckBox(this, wxID_ANY, wxT("AutoBrightness on by default"));
-				general_sizer->Add(autobrightness_checkbox, flags);
-
-				wxSizer * const sizerBtns = new wxBoxSizer(wxHORIZONTAL);
-				sizerBtns->Add(new wxButton(this, wxID_SAVE, wxT("Save")), flags);
-				sizerBtns->Add(new wxButton(this, wxID_CANCEL, wxT("Discard")), flags);
-				general_sizer->Add(sizerBtns, flags.Align(wxALIGN_CENTER_HORIZONTAL));
+				general_sizer->Add(autobrightness_checkbox);
 			general_panel->SetSizer(general_sizer);
 		GetBookCtrl()->AddPage(general_panel, wxT("General"));
 		// end General Settings;
@@ -172,8 +169,6 @@ SettingsDialog::SettingsDialog(const wxString& title)
 		sunrise_time->SetEditable(true);
 		sunset_time->SetEditable(true);
 	}
-
-	CreateButtons(wxOK | wxCANCEL);
 
 	LayoutDialog();
 
