@@ -171,10 +171,6 @@ SettingsDialog::SettingsDialog(const wxString& title)
 	}
 
 	LayoutDialog();
-
-	// actually initiate the sizer
-	//SetSizerAndFit(panel_sizer);
-	//Centre();
 }
 
 SettingsDialog::~SettingsDialog() {
