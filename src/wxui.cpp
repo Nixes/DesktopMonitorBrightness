@@ -132,31 +132,31 @@ SettingsDialog::SettingsDialog(const wxString& title)
 		// start General Settings
 		wxPanel* general_panel = new wxPanel(GetBookCtrl(), wxID_ANY);
 			wxSizer * const general_sizer = new wxBoxSizer(wxVERTICAL);
-				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")));
+				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")), flags);
 				update_interval = new wxTextCtrl(general_panel, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, timeValidator);
-				general_sizer->Add(update_interval);
+				general_sizer->Add(update_interval, flags);
 
 
-				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("AutoBrightness Sunrise time")));
+				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("AutoBrightness Sunrise time")), flags);
 				sunrise_time = new wxTextCtrl(general_panel, wxID_ANY, std::to_string(mMan.GetSunrisetime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, floatTimeValidator);
-				general_sizer->Add(sunrise_time);
+				general_sizer->Add(sunrise_time, flags);
 
 
-				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("AutoBrightness Sunset time")));
+				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("AutoBrightness Sunset time")), flags);
 				sunset_time = new wxTextCtrl(general_panel, wxID_ANY, std::to_string(mMan.GetSunsettime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, floatTimeValidator);
-				general_sizer->Add(sunset_time);
+				general_sizer->Add(sunset_time, flags);
 
 				// these two should ideally be the same control that allows you to set both the minimum and the maximum on the same slider
-				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("Minimum Brightness")));
+				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("Minimum Brightness")), flags);
 				min_slider = new wxSlider(general_panel, 5800, mMan.GetMinBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
 				general_sizer->Add(min_slider, wxSizerFlags().Expand());
 
-				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("Maximum Brightness")));
+				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("Maximum Brightness")), flags);
 				max_slider = new wxSlider(general_panel, 5800, mMan.GetMaxBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
 				general_sizer->Add(max_slider, wxSizerFlags().Expand());
 
 				autobrightness_checkbox = new wxCheckBox(general_panel, wxID_ANY, wxT("AutoBrightness on by default"));
-				general_sizer->Add(autobrightness_checkbox);
+				general_sizer->Add(autobrightness_checkbox, flags);
 			general_panel->SetSizer(general_sizer);
 		GetBookCtrl()->AddPage(general_panel, wxT("General"));
 		// end General Settings;
