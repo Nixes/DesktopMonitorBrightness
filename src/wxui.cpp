@@ -99,8 +99,8 @@ wxEND_EVENT_TABLE()
 SettingsDialog::SettingsDialog(const wxString& title)
 	: wxPropertySheetDialog(NULL, wxID_ANY, title)
 {
-	//wxSizerFlags flags;
-	//flags.Border(wxALL, 10);
+	wxSizerFlags flags;
+	flags.Border(wxALL, 5);
 
 	CreateButtons(wxOK | wxCANCEL);
 
@@ -112,21 +112,21 @@ SettingsDialog::SettingsDialog(const wxString& title)
 
 
 		// start location specific settings
-		/*wxPanel* location_panel = new wxPanel(GetBookCtrl(), wxID_ANY);
+		wxPanel* location_panel = new wxPanel(GetBookCtrl(), wxID_ANY);
 			wxSizer * const location_sizer = new wxBoxSizer(wxVERTICAL);
-				auto_suntime_calc_checkbox = new wxCheckBox(this, wxID_ANY, wxT("Automatically update suntimes using GeoIP"));
+				auto_suntime_calc_checkbox = new wxCheckBox(location_panel, wxID_ANY, wxT("Automatically update suntimes using GeoIP"));
 				auto_suntime_calc_checkbox->SetValue(mMan.GetAutoSuntimeCalc());
 				location_sizer->Add(auto_suntime_calc_checkbox, flags);
 
-				location_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Longitude")), flags);
-				longitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetLongitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+				location_sizer->Add(new wxStaticText(location_panel, wxID_ANY, wxT("Longitude")), flags);
+				longitude_text = new wxTextCtrl(location_panel, wxID_ANY, std::to_string(mMan.GetLongitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 				location_sizer->Add(longitude_text, flags);
 
-				location_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Latitude")), flags);
-				latitude_text = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetLatitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+				location_sizer->Add(new wxStaticText(location_panel, wxID_ANY, wxT("Latitude")), flags);
+				latitude_text = new wxTextCtrl(location_panel, wxID_ANY, std::to_string(mMan.GetLatitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 				location_sizer->Add(latitude_text, flags);
 			location_panel->SetSizer(location_sizer);
-		GetBookCtrl()->AddPage(location_panel, wxT("Location")); */
+		GetBookCtrl()->AddPage(location_panel, wxT("Location"));
 		// end location specific settings
 
 		// start General Settings
