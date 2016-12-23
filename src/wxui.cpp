@@ -132,30 +132,30 @@ SettingsDialog::SettingsDialog(const wxString& title)
 		// start General Settings
 		wxPanel* general_panel = new wxPanel(GetBookCtrl(), wxID_ANY);
 			wxSizer * const general_sizer = new wxBoxSizer(wxVERTICAL);
-				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")));
-				update_interval = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, timeValidator);
+				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("AutoBrightness Update Interval (seconds)")));
+				update_interval = new wxTextCtrl(general_panel, wxID_ANY, std::to_string(mMan.GetPollingTime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, timeValidator);
 				general_sizer->Add(update_interval);
 
 
-				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunrise time")));
-				sunrise_time = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetSunrisetime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, floatTimeValidator);
+				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("AutoBrightness Sunrise time")));
+				sunrise_time = new wxTextCtrl(general_panel, wxID_ANY, std::to_string(mMan.GetSunrisetime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, floatTimeValidator);
 				general_sizer->Add(sunrise_time);
 
 
-				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("AutoBrightness Sunset time")));
-				sunset_time = new wxTextCtrl(this, wxID_ANY, std::to_string(mMan.GetSunsettime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, floatTimeValidator);
+				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("AutoBrightness Sunset time")));
+				sunset_time = new wxTextCtrl(general_panel, wxID_ANY, std::to_string(mMan.GetSunsettime()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, floatTimeValidator);
 				general_sizer->Add(sunset_time);
 
 				// these two should ideally be the same control that allows you to set both the minimum and the maximum on the same slider
-				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Minimum Brightness")));
-				min_slider = new wxSlider(this, 5800, mMan.GetMinBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
+				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("Minimum Brightness")));
+				min_slider = new wxSlider(general_panel, 5800, mMan.GetMinBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
 				general_sizer->Add(min_slider, wxSizerFlags().Expand());
 
-				general_sizer->Add(new wxStaticText(this, wxID_ANY, wxT("Maximum Brightness")));
-				max_slider = new wxSlider(this, 5800, mMan.GetMaxBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
+				general_sizer->Add(new wxStaticText(general_panel, wxID_ANY, wxT("Maximum Brightness")));
+				max_slider = new wxSlider(general_panel, 5800, mMan.GetMaxBrightness(), 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_VALUE_LABEL);
 				general_sizer->Add(max_slider, wxSizerFlags().Expand());
 
-				autobrightness_checkbox = new wxCheckBox(this, wxID_ANY, wxT("AutoBrightness on by default"));
+				autobrightness_checkbox = new wxCheckBox(general_panel, wxID_ANY, wxT("AutoBrightness on by default"));
 				general_sizer->Add(autobrightness_checkbox);
 			general_panel->SetSizer(general_sizer);
 		GetBookCtrl()->AddPage(general_panel, wxT("General"));
