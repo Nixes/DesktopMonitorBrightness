@@ -340,6 +340,9 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
  void DesktopMonitorManager::SetMinBrightness(int min_brightness) {
 	 current_settings.min_global_brightness = min_brightness;
  }
+ void DesktopMonitorManager::SetAutoSuntimeCalc(bool auto_suntime_calc_enabled) {
+	 current_settings.auto_suntime_calc = auto_suntime_calc_enabled;
+ }
 
 
  // bunch of generic getters for retreiving internal settings

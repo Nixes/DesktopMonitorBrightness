@@ -69,6 +69,7 @@ public:
 	void SetPollingTime(int polling_time);
 	void SetMaxBrightness(int max_brightness);
 	void SetMinBrightness(int min_brightness);
+	void SetAutoSuntimeCalc(bool auto_suntime_calc_enabled);
 
 	const float GetSunrisetime();
 	const float GetSunsettime();
