@@ -187,6 +187,17 @@ void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
 	// read auto suntime settings
 	mMan.SetAutoSuntimeCalc( auto_suntime_calc_checkbox->GetValue() );
 
+	// read long and lat if autosuntime is false
+	if (!mMan.GetAutoSuntimeCalc()) {
+		double longitude_double, latitude_double;
+
+		longitude_text->GetValue().ToDouble(&longitude_double);
+		mMan.SetLongitude(longitude_double);
+
+		latitude_text->GetValue().ToDouble(&latitude_double);
+		mMan.SetLatitude(latitude_double);
+	}
+
 	// read interval
 	double update_interval_double;
 	update_interval->GetValue().ToDouble(&update_interval_double);
