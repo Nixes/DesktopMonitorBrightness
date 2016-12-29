@@ -107,9 +107,14 @@ SettingsDialog::SettingsDialog(const wxString& title)
 	wxFloatingPointValidator<float>floatTimeValidator(2, 0, wxNUM_VAL_ZERO_AS_BLANK);
 	floatTimeValidator.SetRange(0, 24);
 
-	wxFloatingPointValidator<float>timeValidator(2, 0, wxNUM_VAL_ZERO_AS_BLANK);
+	wxFloatingPointValidator<float>timeValidator(0, wxNUM_VAL_ZERO_AS_BLANK);
 	timeValidator.SetRange(1, 3600); // between 1 second and 1 hour
 
+	wxFloatingPointValidator<float>longValidator(0, wxNUM_VAL_ZERO_AS_BLANK);
+	longValidator.SetRange(180, -180);
+
+	wxFloatingPointValidator<float>latValidator(0, wxNUM_VAL_ZERO_AS_BLANK);
+	latValidator.SetRange(90, -90);
 
 	// start location specific settings
 	wxPanel* location_panel = new wxPanel(GetBookCtrl(), wxID_ANY);
@@ -119,11 +124,11 @@ SettingsDialog::SettingsDialog(const wxString& title)
 			location_sizer->Add(auto_suntime_calc_checkbox, flags);
 
 			location_sizer->Add(new wxStaticText(location_panel, wxID_ANY, wxT("Longitude")), flags);
-			longitude_text = new wxTextCtrl(location_panel, wxID_ANY, std::to_string(mMan.GetLongitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+			longitude_text = new wxTextCtrl(location_panel, wxID_ANY, std::to_string(mMan.GetLongitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, longValidator);
 			location_sizer->Add(longitude_text, flags);
 
 			location_sizer->Add(new wxStaticText(location_panel, wxID_ANY, wxT("Latitude")), flags);
-			latitude_text = new wxTextCtrl(location_panel, wxID_ANY, std::to_string(mMan.GetLatitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+			latitude_text = new wxTextCtrl(location_panel, wxID_ANY, std::to_string(mMan.GetLatitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, latValidator);
 			location_sizer->Add(latitude_text, flags);
 		location_panel->SetSizer(location_sizer);
 	GetBookCtrl()->AddPage(location_panel, wxT("Location"));
