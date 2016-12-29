@@ -123,6 +123,8 @@ SettingsDialog::SettingsDialog(const wxString& title)
 			auto_suntime_calc_checkbox->SetValue(mMan.GetAutoSuntimeCalc());
 			location_sizer->Add(auto_suntime_calc_checkbox, flags);
 
+			location_sizer->Add(new wxButton(this, wxID_ANY, wxT("Search Location")), flags);
+
 			location_sizer->Add(new wxStaticText(location_panel, wxID_ANY, wxT("Longitude")), flags);
 			longitude_text = new wxTextCtrl(location_panel, wxID_ANY, std::to_string(mMan.GetLongitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, longValidator);
 			location_sizer->Add(longitude_text, flags);
