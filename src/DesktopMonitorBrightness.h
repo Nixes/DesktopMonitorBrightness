@@ -70,6 +70,8 @@ public:
 	void SetMaxBrightness(int max_brightness);
 	void SetMinBrightness(int min_brightness);
 	void SetAutoSuntimeCalc(bool auto_suntime_calc_enabled);
+	void SetLongitude(float longitude);
+	void SetLatitude(float latitude);
 
 	const float GetSunrisetime();
 	const float GetSunsettime();

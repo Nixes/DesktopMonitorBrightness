@@ -344,6 +344,14 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 	 current_settings.auto_suntime_calc = auto_suntime_calc_enabled;
  }
 
+ void DesktopMonitorManager::SetLongitude(float longitude) {
+	 current_settings.longitude = longitude;
+ }
+ 
+ void DesktopMonitorManager::SetLatitude(float latitude) {
+	 current_settings.latitude = latitude;
+ }
+
 
  // bunch of generic getters for retreiving internal settings
  const float DesktopMonitorManager::GetSunrisetime( ) {
