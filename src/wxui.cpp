@@ -92,7 +92,7 @@ bool MyApp::OnInit()
 
 wxBEGIN_EVENT_TABLE(SettingsDialog, wxDialog)
 	EVT_CLOSE(SettingsDialog::OnCloseWindow)
-	EVT_BUTTON(wxOK,SettingsDialog::onSave)
+	EVT_BUTTON(wxID_OK,SettingsDialog::onSave)
 wxEND_EVENT_TABLE()
 
 // constructor
@@ -178,6 +178,9 @@ SettingsDialog::~SettingsDialog() {
 
 void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
 	// read settings from dialog
+
+	// read auto suntime settings
+	mMan.SetAutoSuntimeCalc( auto_suntime_calc_checkbox->GetValue() );
 
 	// read interval
 	double update_interval_double;
