@@ -124,7 +124,7 @@ SettingsDialog::SettingsDialog(const wxString& title)
 			auto_suntime_calc_checkbox->SetValue(mMan.GetAutoSuntimeCalc());
 			location_sizer->Add(auto_suntime_calc_checkbox, flags);
 
-			location_sizer->Add(new wxButton(location_panel, wxID_ANY, wxT("Search Location")), flags);
+			location_sizer->Add(new wxButton(location_panel, 4000, wxT("Search Location")), flags);
 
 			location_sizer->Add(new wxStaticText(location_panel, wxID_ANY, wxT("Longitude")), flags);
 			longitude_text = new wxTextCtrl(location_panel, wxID_ANY, std::to_string(mMan.GetLongitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, longValidator);
@@ -186,7 +186,13 @@ SettingsDialog::~SettingsDialog() {
 
 
 void SettingsDialog::openSearch(wxCommandEvent& WXUNUSED(event)) {
-	
+	wxTextEntryDialog dlg(this, "Type the name of your location, can be an address postcode or city.", "Location Seach");
+
+	if (dlg.ShowModal() == wxID_OK) {
+		wxString address = dlg.GetValue();
+
+		mMan.SetLongLatFromAddress(address.ToStdString());
+	}
 }
 
 void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
