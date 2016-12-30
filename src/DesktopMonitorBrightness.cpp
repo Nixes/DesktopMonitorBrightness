@@ -320,6 +320,34 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 }
 
 
+ void DesktopMonitorManager::SetLongLatFromAddress(std::string location) {
+	 GeocodeGrabber geoGrab = GeocodeGrabber("AIzaSyD - NPqot8WGQyK0GtcrkMasHPIzKHB - HTo", "AIzaSyBF70jGFpFNUGJFMUOqVLQfTikvKRrdc0U");
+
+	 if (current_settings.auto_suntime_calc) {
+		 if (current_settings.longitude == 0 || current_settings.latitude == 0) {
+			 // determine longitude and latitude automatically from ip address
+			 geoGrab.GetLongLatFromAddress(location);
+
+			 // store recieved long/lat values in settings for later use
+			 current_settings.longitude = geoGrab.GetLongitude();
+			 current_settings.latitude = geoGrab.GetLatitude();
+
+			 current_settings.sunrise = geoGrab.GetSunrise();
+			 current_settings.sunset = geoGrab.GetSunset();
+
+			 // make sure these changes are saved to config
+			 SaveSettings();
+		 }
+		 else {
+			 geoGrab.SetLongitude(current_settings.longitude);
+			 geoGrab.SetLatitude(current_settings.latitude);
+
+			 current_settings.sunrise = geoGrab.GetSunrise();
+			 current_settings.sunset = geoGrab.GetSunset();
+		 }
+	 }
+ }
+
  // bunch of generic setters for updating internal settings
  void DesktopMonitorManager::SetSunrisetime(float sunrisetime) {
 	 current_settings.sunrise = sunrisetime;

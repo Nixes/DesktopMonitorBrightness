@@ -51,6 +51,7 @@ private:
 	float GetSunTimeRatio(float currenttime);
 public:
 	const int GetBrightness();
+	void SetLongLatFromAddress(std::string location);
 	bool Tests(std::string & error);
 	DesktopMonitorManager();
 
