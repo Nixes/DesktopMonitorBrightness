@@ -61,6 +61,7 @@ protected:
 
 	void OnExit(wxCommandEvent& event);
 	void OnCloseWindow(wxCloseEvent& event);
+	void openSearch(wxCommandEvent & WXUNUSED);
 	void onSave(wxCommandEvent & WXUNUSED);
 
 	MyTaskBarIcon   *m_taskBarIcon;

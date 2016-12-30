@@ -93,6 +93,7 @@ bool MyApp::OnInit()
 wxBEGIN_EVENT_TABLE(SettingsDialog, wxDialog)
 	EVT_CLOSE(SettingsDialog::OnCloseWindow)
 	EVT_BUTTON(wxID_OK,SettingsDialog::onSave)
+	EVT_BUTTON(4000,SettingsDialog::openSearch)
 wxEND_EVENT_TABLE()
 
 // constructor
@@ -123,7 +124,7 @@ SettingsDialog::SettingsDialog(const wxString& title)
 			auto_suntime_calc_checkbox->SetValue(mMan.GetAutoSuntimeCalc());
 			location_sizer->Add(auto_suntime_calc_checkbox, flags);
 
-			location_sizer->Add(new wxButton(this, wxID_ANY, wxT("Search Location")), flags);
+			location_sizer->Add(new wxButton(location_panel, wxID_ANY, wxT("Search Location")), flags);
 
 			location_sizer->Add(new wxStaticText(location_panel, wxID_ANY, wxT("Longitude")), flags);
 			longitude_text = new wxTextCtrl(location_panel, wxID_ANY, std::to_string(mMan.GetLongitude()), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, longValidator);
@@ -181,6 +182,11 @@ SettingsDialog::SettingsDialog(const wxString& title)
 
 SettingsDialog::~SettingsDialog() {
 
+}
+
+
+void SettingsDialog::openSearch(wxCommandEvent& WXUNUSED(event)) {
+	
 }
 
 void SettingsDialog::onSave(wxCommandEvent& WXUNUSED(event)) {
