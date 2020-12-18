@@ -34,7 +34,7 @@ void DesktopMonitorManager::GetMonitorHandles() {
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnum, 0);
 	// while this function does not return anything the results are found in physicalMonitorHandles
 
-	for each (HANDLE monitor in physicalMonitorHandles) {
+	for (HANDLE monitor: physicalMonitorHandles) {
 		if (!AddMonitorScaleFactor(monitor)) {
 			// if the monitor handles are invalid
 			Sleep(1000);
