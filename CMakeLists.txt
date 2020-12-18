@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.17)
 project(DesktopMonitorBrightness)
 
+execute_process(COMMAND conan install ${CMAKE_SOURCE_DIR} --build=missing)
+
 set(CMAKE_CXX_STANDARD 14)
+
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
 
 include_directories(src)
 
@@ -14,3 +19,4 @@ add_executable(DesktopMonitorBrightness
         src/targetver.h
         src/wxui.cpp
         src/wxui.h)
+target_link_libraries(DesktopMonitorBrightness ${CONAN_LIBS})
