@@ -12,6 +12,11 @@ Features:
 ## Building
 Requires VS2015 or above to build due to requirements for certain c++11 features.
 
+Requires conan installed, also need to add the bincrafters remote
+```
+conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+```
+
 Also requires wxWidgets libraries.
 
 ## Design
