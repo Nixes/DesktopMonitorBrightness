@@ -2,6 +2,8 @@
 #include <stdlib.h>  // used for sleep function
 #include "DesktopMonitorBrightness.h"
 
+#pragma comment(lib, "Dxva2.lib")
+
 // include geocodeing and sunrise/sunset calculation lib
 #include "GeocodeGrabber.hpp"
 
