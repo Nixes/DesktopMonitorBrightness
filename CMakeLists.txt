@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 project(DesktopMonitorBrightness)
 
-execute_process(COMMAND conan install ${CMAKE_SOURCE_DIR} --build=missing)
+execute_process(COMMAND conan install ${CMAKE_SOURCE_DIR} -s build_type=Debug --build=missing)
 
 set(CMAKE_CXX_STANDARD 11)
 
