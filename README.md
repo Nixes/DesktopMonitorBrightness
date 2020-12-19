@@ -17,6 +17,12 @@ Requires conan installed, also need to add the bincrafters remote
 conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
 ```
 
+for local development
+```
+conan install . -s build_type=Debug
+```
+then set your cmake environment to a debug one and build
+
 Also requires wxWidgets libraries.
 
 ## Design
