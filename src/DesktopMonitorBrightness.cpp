@@ -31,19 +31,24 @@ void DesktopMonitorManager::ResetMonitorHandles() {
 	physicalMonitorHandles.clear();
 }
 
-void DesktopMonitorManager::GetMonitorHandles() {
+void DesktopMonitorManager::GetMonitorHandles(int retryNumber) {
 	// this function is an odd beast
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnum, 0);
 	// while this function does not return anything the results are found in physicalMonitorHandles
 
 	for (HANDLE monitor: physicalMonitorHandles) {
 		if (!AddMonitorScaleFactor(monitor)) {
+            // retry limit
+		    if (retryNumber > 5) {
+		        std::cout << "Hit retry limit enumerating monitors\n";
+		        return;
+		    }
 			// if the monitor handles are invalid
 			Sleep(1000);
 			// reset the handles
 			ResetMonitorHandles();
 			// get them again
-			GetMonitorHandles();
+			GetMonitorHandles(retryNumber + 1);
 		}
 	}
 }
