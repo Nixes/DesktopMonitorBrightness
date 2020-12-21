@@ -2,6 +2,8 @@
 #include <stdlib.h>  // used for sleep function
 #include "DesktopMonitorBrightness.h"
 
+#pragma comment(lib, "Dxva2.lib")
+
 // include geocodeing and sunrise/sunset calculation lib
 #include "GeocodeGrabber.hpp"
 
@@ -20,28 +22,33 @@ std::vector<HANDLE>  physicalMonitorHandles;
 
 DesktopMonitorManager::DesktopMonitorManager() {
 	RestoreSettings("settings.json");
-	AutoUpdateSuntime();
+//	AutoUpdateSuntime();
 
-	GetMonitorHandles();
+	GetMonitorHandles(0);
 }
 
 void DesktopMonitorManager::ResetMonitorHandles() {
 	physicalMonitorHandles.clear();
 }
 
-void DesktopMonitorManager::GetMonitorHandles() {
+void DesktopMonitorManager::GetMonitorHandles(int retryNumber) {
 	// this function is an odd beast
 	::EnumDisplayMonitors(NULL, NULL, MonitorEnum, 0);
 	// while this function does not return anything the results are found in physicalMonitorHandles
 
-	for each (HANDLE monitor in physicalMonitorHandles) {
+	for (HANDLE monitor: physicalMonitorHandles) {
 		if (!AddMonitorScaleFactor(monitor)) {
+			// retry limit
+			if (retryNumber > 5) {
+				std::cout << "Hit retry limit enumerating monitors\n";
+				return;
+			}
 			// if the monitor handles are invalid
 			Sleep(1000);
 			// reset the handles
 			ResetMonitorHandles();
 			// get them again
-			GetMonitorHandles();
+			GetMonitorHandles(retryNumber + 1);
 		}
 	}
 }

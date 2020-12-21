@@ -32,7 +32,7 @@ private:
 	// member funcs
 	//
 	void ResetMonitorHandles();
-	void GetMonitorHandles();
+	void GetMonitorHandles(int retryNumber);
 	// pysmonitor must be a physical monitor as obtained from, GetNumberOfPhysicalMonitorsFromHMONITOR and not a HMONITOR
 	void PrintMonitorBrightness(HANDLE physmonitor);
 	void SetBrightness(HANDLE hMonitor, int brightness, float scalefactor);

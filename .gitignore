@@ -13,3 +13,13 @@
 packages/
 *.dll
 *.exe
+cmake-build-debug/
+cmake-build-release/
+
+# clion stuff
+.idea/
+
+# conan stuff
+conanbuildinfo.*
+conaninfo.txt
+graph_info.json

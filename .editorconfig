@@ -1,0 +1,6 @@
+# top-most EditorConfig file
+root = true
+
+# apply to all file types
+[*.{c,cpp,h,hpp}]
+indent_style = tab
