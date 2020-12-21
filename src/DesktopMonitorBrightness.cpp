@@ -24,7 +24,7 @@ DesktopMonitorManager::DesktopMonitorManager() {
 	RestoreSettings("settings.json");
 	AutoUpdateSuntime();
 
-	GetMonitorHandles();
+	GetMonitorHandles(0);
 }
 
 void DesktopMonitorManager::ResetMonitorHandles() {
