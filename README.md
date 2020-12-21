@@ -19,7 +19,7 @@ conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-co
 
 for local development
 ```
-conan install . -s build_type=Debug
+conan install . -s build_type=Debug --build=missing
 ```
 then set your cmake environment to a debug one and build
 
