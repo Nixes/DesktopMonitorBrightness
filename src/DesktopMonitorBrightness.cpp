@@ -22,7 +22,7 @@ std::vector<HANDLE>  physicalMonitorHandles;
 
 DesktopMonitorManager::DesktopMonitorManager() {
 	RestoreSettings("settings.json");
-	AutoUpdateSuntime();
+//	AutoUpdateSuntime();
 
 	GetMonitorHandles(0);
 }
