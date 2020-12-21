@@ -10,7 +10,7 @@ conan_basic_setup()
 
 include_directories(src)
 
-add_executable(DesktopMonitorBrightness
+add_executable(DesktopMonitorBrightness WIN32
         src/DesktopMonitorBrightness.cpp
         src/DesktopMonitorBrightness.h
         src/GeocodeGrabber.hpp
@@ -18,5 +18,5 @@ add_executable(DesktopMonitorBrightness
         src/stdafx.h
         src/targetver.h
         src/wxui.cpp
-        src/wxui.h src/dummy.cpp)
+        src/wxui.h)
 target_link_libraries(DesktopMonitorBrightness ${CONAN_LIBS})
