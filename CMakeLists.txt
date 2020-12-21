@@ -10,6 +10,8 @@ conan_basic_setup()
 
 include_directories(src)
 
+SET(WINDOWS_RESOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/sample.rc)
+
 add_executable(DesktopMonitorBrightness WIN32
         src/DesktopMonitorBrightness.cpp
         src/DesktopMonitorBrightness.h
@@ -18,5 +20,5 @@ add_executable(DesktopMonitorBrightness WIN32
         src/stdafx.h
         src/targetver.h
         src/wxui.cpp
-        src/wxui.h)
+        src/wxui.h ${WINDOWS_RESOURCE_PATH})
 target_link_libraries(DesktopMonitorBrightness ${CONAN_LIBS})
