@@ -38,11 +38,11 @@ void DesktopMonitorManager::GetMonitorHandles(int retryNumber) {
 
 	for (HANDLE monitor: physicalMonitorHandles) {
 		if (!AddMonitorScaleFactor(monitor)) {
-            // retry limit
-		    if (retryNumber > 5) {
-		        std::cout << "Hit retry limit enumerating monitors\n";
-		        return;
-		    }
+			// retry limit
+			if (retryNumber > 5) {
+				std::cout << "Hit retry limit enumerating monitors\n";
+				return;
+			}
 			// if the monitor handles are invalid
 			Sleep(1000);
 			// reset the handles
