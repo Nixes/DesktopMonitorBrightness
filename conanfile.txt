@@ -1,6 +1,9 @@
 [requires]
 cpprestsdk/2.10.16
 wxwidgets/3.1.4@bincrafters/stable
+qt/5.15.2@bincrafters/stable
+openssl/1.1.1h
 
 [generators]
 cmake
+qt

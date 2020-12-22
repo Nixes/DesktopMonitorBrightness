@@ -23,3 +23,4 @@ cmake-build-release/
 conanbuildinfo.*
 conaninfo.txt
 graph_info.json
+qt.conf
