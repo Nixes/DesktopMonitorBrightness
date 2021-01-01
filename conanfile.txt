@@ -7,3 +7,9 @@ openssl/1.1.1h
 [generators]
 cmake
 qt
+
+[imports]
+# required to copy QT binaries since I can't statically build without releaseing as gpl
+# how: https://docs.conan.io/en/latest/using_packages/conanfile_txt.html#imports
+bin, *.dll -> ./cmake-build-debug/bin # Copies all dll files from packages bin folder to my "bin" folder
+lib, *.dylib* -> ./cmake-build-debug/bin # Copies all dylib files from packages lib folder to my "bin" folder
