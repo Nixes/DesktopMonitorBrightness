@@ -14,6 +14,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
 set(CMAKE_AUTOUIC ON)
+# turn on auto including of QT resource files referenced in add_executable
+set(CMAKE_AUTORCC ON)
 
 
 include_directories(src)
@@ -33,6 +35,7 @@ add_executable(DesktopMonitorBrightness ${WINDOWS_RESOURCE_PATH}
         src/qtmain.cpp
         src/window.h
         src/window.cpp
+        src/taskbar-icon.qrc
         )
 target_link_libraries(DesktopMonitorBrightness ${CONAN_LIBS} Qt5::Core)
 

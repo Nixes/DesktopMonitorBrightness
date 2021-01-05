@@ -66,6 +66,7 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 #include <QMessageBox>
+#include <iostream>
 
 //! [0]
 Window::Window()
@@ -79,9 +80,8 @@ Window::Window()
     createTrayIcon();
 
     connect(showMessageButton, &QAbstractButton::clicked, this, &Window::showMessage);
-    connect(showIconCheckBox, &QAbstractButton::toggled, trayIcon, &QSystemTrayIcon::setVisible);
-    connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
-            this, &Window::setIcon);
+//    connect(showIconCheckBox, &QAbstractButton::toggled, trayIcon, &QSystemTrayIcon::setVisible);
+    connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),this, &Window::setIcon);
     connect(trayIcon, &QSystemTrayIcon::messageClicked, this, &Window::messageClicked);
     connect(trayIcon, &QSystemTrayIcon::activated, this, &Window::iconActivated);
 
@@ -159,6 +159,7 @@ void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
 //! [5]
 void Window::showMessage()
 {
+    std::cout << "Show message called" << std::endl;
     showIconCheckBox->setChecked(true);
     int selectedIcon = typeComboBox->itemData(typeComboBox->currentIndex()).toInt();
     QSystemTrayIcon::MessageIcon msgIcon = QSystemTrayIcon::MessageIcon(selectedIcon);
@@ -292,6 +293,13 @@ void Window::createTrayIcon()
 
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
+//    QIcon icon = QIcon("./../sunwhite.ico");
+    QIcon icon = QIcon(":taskbar-icon");
+    trayIcon->setIcon(icon);
+    trayIcon->setVisible(true);
+    std::cout << "Tray icon created" << std::endl;
+
+
 }
 
 #endif
