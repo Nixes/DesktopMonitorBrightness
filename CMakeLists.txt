@@ -30,7 +30,10 @@ add_executable(DesktopMonitorBrightness ${WINDOWS_RESOURCE_PATH}
         src/stdafx.cpp
         src/stdafx.h
         src/targetver.h
-        src/qtmain.cpp)
+        src/qtmain.cpp
+        src/window.h
+        src/window.cpp
+        )
 target_link_libraries(DesktopMonitorBrightness ${CONAN_LIBS} Qt5::Core)
 
 configure_file(${CMAKE_CURRENT_BINARY_DIR}/qt.conf ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/qt.conf COPYONLY)

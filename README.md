@@ -28,3 +28,8 @@ Also requires wxWidgets libraries.
 ## Design
 Uses wxWidgets for the interface, and json for config loading / saving.
 Currently only has a windows backend for setting monitor brightness, but a linux one is planned.
+
+
+## WIP
+QT Now works but trying to get this to work
+https://doc.qt.io/qt-5/qtwidgets-desktop-systray-example.html
