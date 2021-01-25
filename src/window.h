@@ -119,6 +119,12 @@ private:
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
+
+    void createBrightnessSliderGroupBox();
+
+    QGroupBox *brightnessGroupBox;
+
+    QPoint calculateWindowPositionNearSystemTray(QRect systemTrayPosition, QSize windowSize);
 };
 //! [0]
 

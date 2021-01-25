@@ -73,6 +73,7 @@ Window::Window()
 {
     createIconGroupBox();
     createMessageGroupBox();
+    createBrightnessSliderGroupBox();
 
     iconLabel->setMinimumWidth(durationLabel->sizeHint().width());
 
@@ -88,15 +89,33 @@ Window::Window()
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(iconGroupBox);
     mainLayout->addWidget(messageGroupBox);
+    mainLayout->addWidget(brightnessGroupBox);
     setLayout(mainLayout);
 
     iconComboBox->setCurrentIndex(1);
     trayIcon->show();
 
+    const QRect &systemTrayPosition = trayIcon->geometry();
+
     setWindowTitle(tr("Systray"));
-    resize(400, 300);
+    QSize *windowSize = new QSize(400, 300);
+    resize(*windowSize);
+    move(calculateWindowPositionNearSystemTray(systemTrayPosition,*windowSize));
 }
 //! [0]
+
+/**
+ * Returns the position to render a window just above the system tray
+ * @param systemTrayPosition
+ * @param windowSize
+ * @return
+ */
+QPoint Window::calculateWindowPositionNearSystemTray(QRect systemTrayPosition,QSize windowSize) {
+    QPoint topOfSystemTrayStart = systemTrayPosition.topRight();
+    topOfSystemTrayStart.setX( topOfSystemTrayStart.x() - windowSize.width() );
+    topOfSystemTrayStart.setY( topOfSystemTrayStart.y() - windowSize.height() );
+    return topOfSystemTrayStart;
+}
 
 //! [1]
 void Window::setVisible(bool visible)
@@ -208,6 +227,25 @@ void Window::createIconGroupBox()
     iconGroupBox->setLayout(iconLayout);
 }
 
+void Window::createBrightnessSliderGroupBox()
+{
+    brightnessGroupBox = new QGroupBox(tr("Monitor Brightness"));
+
+
+    QHBoxLayout *iconLayout = new QHBoxLayout;
+
+
+    QSlider *slider = new QSlider(Qt::Horizontal);
+    slider->setFocusPolicy(Qt::StrongFocus);
+    slider->setTickPosition(QSlider::TicksBothSides);
+    slider->setTickInterval(10);
+    slider->setSingleStep(1);
+
+    iconLayout->addWidget(slider);
+    iconLayout->addStretch();
+    brightnessGroupBox->setLayout(iconLayout);
+}
+
 void Window::createMessageGroupBox()
 {
     messageGroupBox = new QGroupBox(tr("Balloon Message"));
@@ -296,7 +334,7 @@ void Window::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     trayIcon->setContextMenu(trayIconMenu);
 //    QIcon icon = QIcon("./../sunwhite.ico");
-    QIcon icon = QIcon(":taskbar-icon");
+    QIcon icon = QIcon(":/taskbar-icon.ico");
     trayIcon->setIcon(icon);
     trayIcon->setVisible(true);
     std::cout << "Tray icon created" << std::endl;
