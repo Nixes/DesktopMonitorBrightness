@@ -71,6 +71,10 @@
 //! [0]
 BrightnessControlWindow::BrightnessControlWindow()
 {
+    // set as a frameless window, since its more like a volume control then a dialog
+    setWindowFlag(Qt::FramelessWindowHint,true);
+    setWindowFlag(Qt::WindowStaysOnTopHint,true);
+
     createBrightnessSliderGroupBox();
 
     createActions();
@@ -89,7 +93,7 @@ BrightnessControlWindow::BrightnessControlWindow()
     const QRect &systemTrayPosition = trayIcon->geometry();
 
     setWindowTitle(tr("Systray"));
-    QSize *windowSize = new QSize(400, 300);
+    QSize *windowSize = new QSize(400, 100);
     resize(*windowSize);
     move(calculateWindowPositionNearSystemTray(systemTrayPosition,*windowSize));
 }
@@ -103,7 +107,7 @@ BrightnessControlWindow::BrightnessControlWindow()
  */
 QPoint BrightnessControlWindow::calculateWindowPositionNearSystemTray(QRect systemTrayPosition, QSize windowSize) {
     QPoint topOfSystemTrayStart = systemTrayPosition.topRight();
-    topOfSystemTrayStart.setX( topOfSystemTrayStart.x() - windowSize.width() );
+    topOfSystemTrayStart.setX( topOfSystemTrayStart.x() );
     topOfSystemTrayStart.setY( topOfSystemTrayStart.y() - windowSize.height() );
     return topOfSystemTrayStart;
 }
