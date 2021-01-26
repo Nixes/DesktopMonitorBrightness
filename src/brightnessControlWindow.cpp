@@ -69,30 +69,21 @@
 #include <iostream>
 
 //! [0]
-Window::Window()
+BrightnessControlWindow::BrightnessControlWindow()
 {
-    createIconGroupBox();
-    createMessageGroupBox();
     createBrightnessSliderGroupBox();
-
-    iconLabel->setMinimumWidth(durationLabel->sizeHint().width());
 
     createActions();
     createTrayIcon();
 
-    connect(showMessageButton, &QAbstractButton::clicked, this, &Window::showMessage);
 //    connect(showIconCheckBox, &QAbstractButton::toggled, trayIcon, &QSystemTrayIcon::setVisible);
-    connect(iconComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),this, &Window::setIcon);
-    connect(trayIcon, &QSystemTrayIcon::messageClicked, this, &Window::messageClicked);
-    connect(trayIcon, &QSystemTrayIcon::activated, this, &Window::iconActivated);
+    connect(trayIcon, &QSystemTrayIcon::messageClicked, this, &BrightnessControlWindow::messageClicked);
+    connect(trayIcon, &QSystemTrayIcon::activated, this, &BrightnessControlWindow::iconActivated);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(iconGroupBox);
-    mainLayout->addWidget(messageGroupBox);
     mainLayout->addWidget(brightnessGroupBox);
     setLayout(mainLayout);
 
-    iconComboBox->setCurrentIndex(1);
     trayIcon->show();
 
     const QRect &systemTrayPosition = trayIcon->geometry();
@@ -110,7 +101,7 @@ Window::Window()
  * @param windowSize
  * @return
  */
-QPoint Window::calculateWindowPositionNearSystemTray(QRect systemTrayPosition,QSize windowSize) {
+QPoint BrightnessControlWindow::calculateWindowPositionNearSystemTray(QRect systemTrayPosition, QSize windowSize) {
     QPoint topOfSystemTrayStart = systemTrayPosition.topRight();
     topOfSystemTrayStart.setX( topOfSystemTrayStart.x() - windowSize.width() );
     topOfSystemTrayStart.setY( topOfSystemTrayStart.y() - windowSize.height() );
@@ -118,7 +109,7 @@ QPoint Window::calculateWindowPositionNearSystemTray(QRect systemTrayPosition,QS
 }
 
 //! [1]
-void Window::setVisible(bool visible)
+void BrightnessControlWindow::setVisible(bool visible)
 {
     minimizeAction->setEnabled(visible);
     maximizeAction->setEnabled(!isMaximized());
@@ -128,7 +119,7 @@ void Window::setVisible(bool visible)
 //! [1]
 
 //! [2]
-void Window::closeEvent(QCloseEvent *event)
+void BrightnessControlWindow::closeEvent(QCloseEvent *event)
 {
 #ifdef Q_OS_MACOS
     if (!event->spontaneous() || !isVisible()) {
@@ -136,40 +127,29 @@ void Window::closeEvent(QCloseEvent *event)
     }
 #endif
     if (trayIcon->isVisible()) {
-        QMessageBox::information(this, tr("Systray"),
-                                 tr("The program will keep running in the "
-                                    "system tray. To terminate the program, "
-                                    "choose <b>Quit</b> in the context menu "
-                                    "of the system tray entry."));
         hide();
         event->ignore();
     }
 }
 //! [2]
 
-//! [3]
-void Window::setIcon(int index)
-{
-    QIcon icon = iconComboBox->itemIcon(index);
-    trayIcon->setIcon(icon);
-    setWindowIcon(icon);
-
-    trayIcon->setToolTip(iconComboBox->itemText(index));
-}
-//! [3]
-
 //! [4]
-void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
+void BrightnessControlWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
         std::cout << "Tray icon single clicked" << std::endl;
+        // toggle visibility on icon click
+        if (!isVisible()) {
+            show();
+        } else {
+            hide();
+        }
         break;
     case QSystemTrayIcon::DoubleClick:
-        iconComboBox->setCurrentIndex((iconComboBox->currentIndex() + 1) % iconComboBox->count());
+
         break;
     case QSystemTrayIcon::MiddleClick:
-        showMessage();
         break;
     default:
         ;
@@ -177,27 +157,8 @@ void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
 }
 //! [4]
 
-//! [5]
-void Window::showMessage()
-{
-    std::cout << "Show message called" << std::endl;
-    showIconCheckBox->setChecked(true);
-    int selectedIcon = typeComboBox->itemData(typeComboBox->currentIndex()).toInt();
-    QSystemTrayIcon::MessageIcon msgIcon = QSystemTrayIcon::MessageIcon(selectedIcon);
-
-    if (selectedIcon == -1) { // custom icon
-        QIcon icon(iconComboBox->itemIcon(iconComboBox->currentIndex()));
-        trayIcon->showMessage(titleEdit->text(), bodyEdit->toPlainText(), icon,
-                          durationSpinBox->value() * 1000);
-    } else {
-        trayIcon->showMessage(titleEdit->text(), bodyEdit->toPlainText(), msgIcon,
-                          durationSpinBox->value() * 1000);
-    }
-}
-//! [5]
-
 //! [6]
-void Window::messageClicked()
+void BrightnessControlWindow::messageClicked()
 {
     QMessageBox::information(nullptr, tr("Systray"),
                              tr("Sorry, I already gave what help I could.\n"
@@ -205,29 +166,7 @@ void Window::messageClicked()
 }
 //! [6]
 
-void Window::createIconGroupBox()
-{
-    iconGroupBox = new QGroupBox(tr("Tray Icon"));
-
-    iconLabel = new QLabel("Icon:");
-
-    iconComboBox = new QComboBox;
-    iconComboBox->addItem(QIcon(":/images/bad.png"), tr("Bad"));
-    iconComboBox->addItem(QIcon(":/images/heart.png"), tr("Heart"));
-    iconComboBox->addItem(QIcon(":/images/trash.png"), tr("Trash"));
-
-    showIconCheckBox = new QCheckBox(tr("Show icon"));
-    showIconCheckBox->setChecked(true);
-
-    QHBoxLayout *iconLayout = new QHBoxLayout;
-    iconLayout->addWidget(iconLabel);
-    iconLayout->addWidget(iconComboBox);
-    iconLayout->addStretch();
-    iconLayout->addWidget(showIconCheckBox);
-    iconGroupBox->setLayout(iconLayout);
-}
-
-void Window::createBrightnessSliderGroupBox()
+void BrightnessControlWindow::createBrightnessSliderGroupBox()
 {
     brightnessGroupBox = new QGroupBox(tr("Monitor Brightness"));
 
@@ -246,68 +185,8 @@ void Window::createBrightnessSliderGroupBox()
     brightnessGroupBox->setLayout(iconLayout);
 }
 
-void Window::createMessageGroupBox()
-{
-    messageGroupBox = new QGroupBox(tr("Balloon Message"));
 
-    typeLabel = new QLabel(tr("Type:"));
-
-    typeComboBox = new QComboBox;
-    typeComboBox->addItem(tr("None"), QSystemTrayIcon::NoIcon);
-    typeComboBox->addItem(style()->standardIcon(
-            QStyle::SP_MessageBoxInformation), tr("Information"),
-            QSystemTrayIcon::Information);
-    typeComboBox->addItem(style()->standardIcon(
-            QStyle::SP_MessageBoxWarning), tr("Warning"),
-            QSystemTrayIcon::Warning);
-    typeComboBox->addItem(style()->standardIcon(
-            QStyle::SP_MessageBoxCritical), tr("Critical"),
-            QSystemTrayIcon::Critical);
-    typeComboBox->addItem(QIcon(), tr("Custom icon"),
-            -1);
-    typeComboBox->setCurrentIndex(1);
-
-    durationLabel = new QLabel(tr("Duration:"));
-
-    durationSpinBox = new QSpinBox;
-    durationSpinBox->setRange(5, 60);
-    durationSpinBox->setSuffix(" s");
-    durationSpinBox->setValue(15);
-
-    durationWarningLabel = new QLabel(tr("(some systems might ignore this "
-                                         "hint)"));
-    durationWarningLabel->setIndent(10);
-
-    titleLabel = new QLabel(tr("Title:"));
-
-    titleEdit = new QLineEdit(tr("Cannot connect to network"));
-
-    bodyLabel = new QLabel(tr("Body:"));
-
-    bodyEdit = new QTextEdit;
-    bodyEdit->setPlainText(tr("Don't believe me. Honestly, I don't have a "
-                              "clue.\nClick this balloon for details."));
-
-    showMessageButton = new QPushButton(tr("Show Message"));
-    showMessageButton->setDefault(true);
-
-    QGridLayout *messageLayout = new QGridLayout;
-    messageLayout->addWidget(typeLabel, 0, 0);
-    messageLayout->addWidget(typeComboBox, 0, 1, 1, 2);
-    messageLayout->addWidget(durationLabel, 1, 0);
-    messageLayout->addWidget(durationSpinBox, 1, 1);
-    messageLayout->addWidget(durationWarningLabel, 1, 2, 1, 3);
-    messageLayout->addWidget(titleLabel, 2, 0);
-    messageLayout->addWidget(titleEdit, 2, 1, 1, 4);
-    messageLayout->addWidget(bodyLabel, 3, 0);
-    messageLayout->addWidget(bodyEdit, 3, 1, 2, 4);
-    messageLayout->addWidget(showMessageButton, 5, 4);
-    messageLayout->setColumnStretch(3, 1);
-    messageLayout->setRowStretch(4, 1);
-    messageGroupBox->setLayout(messageLayout);
-}
-
-void Window::createActions()
+void BrightnessControlWindow::createActions()
 {
     minimizeAction = new QAction(tr("Mi&nimize"), this);
     connect(minimizeAction, &QAction::triggered, this, &QWidget::hide);
@@ -322,7 +201,7 @@ void Window::createActions()
     connect(quitAction, &QAction::triggered, qApp, &QCoreApplication::quit);
 }
 
-void Window::createTrayIcon()
+void BrightnessControlWindow::createTrayIcon()
 {
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);

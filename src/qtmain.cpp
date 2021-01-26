@@ -4,12 +4,12 @@
 
 #include <QApplication>
 #include <QPushButton>
-#include "window.h"
+#include "brightnessControlWindow.h"
 
 int main(int argc, char **argv) {
     QApplication app (argc, argv);
 
-    Window window;
+    BrightnessControlWindow window;
     window.show();
 
     return app.exec();

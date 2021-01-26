@@ -33,8 +33,8 @@ add_executable(DesktopMonitorBrightness ${WINDOWS_RESOURCE_PATH}
         src/stdafx.h
         src/targetver.h
         src/qtmain.cpp
-        src/window.h
-        src/window.cpp
+        src/brightnessControlWindow.h
+        src/brightnessControlWindow.cpp
         src/taskbar-icon.qrc
         )
 target_link_libraries(DesktopMonitorBrightness ${CONAN_LIBS} Qt5::Core)

@@ -1,5 +1,5 @@
 <!DOCTYPE RCC><RCC version="1.0">
     <qresource>
-        <file alias="taskbar-icon">../sunwhite.ico</file>
+        <file alias="taskbar-icon.ico">../sunwhite.ico</file>
     </qresource>
 </RCC>
