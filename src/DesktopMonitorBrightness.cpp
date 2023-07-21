@@ -181,6 +181,12 @@ BOOL CALLBACK DesktopMonitorManager::MonitorEnum(HMONITOR hMon, HDC hdc, LPRECT 
 			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< this is causing exceptions!!!
 		}
 	}
+	
+	// Clean up allocated memory
+	if (pPhysicalMonitors != NULL) {
+		free(pPhysicalMonitors); // Deallocate the memory
+		pPhysicalMonitors = NULL; // Set the pointer to NULL to avoid using it again.
+	}
 
 	// we always return true to signal that we want to keep looking
 	return true;
